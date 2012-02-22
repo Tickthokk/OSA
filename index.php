@@ -18,7 +18,14 @@
  * NOTE: If you change these, also change the error_reporting() code below
  *
  */
-	define('ENVIRONMENT', 'development');
+ 	# NWW Modification - In httpd.conf, set like this
+ 	# <VirtualHost ....
+ 	# 	...
+ 	# 	SetEnv APPLICATION_ENV development
+ 	#	...
+ 	# </VirtualHost>
+ 	# Don't set one to assume Production.
+	define('ENVIRONMENT', $_SERVER['APPLICATION_ENV'] ?: 'production');
 /*
  *---------------------------------------------------------------
  * ERROR REPORTING

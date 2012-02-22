@@ -44,14 +44,28 @@
 | The $active_record variables lets you determine whether or not to load
 | the active record class
 */
+if (defined('ENVIRONMENT'))
+{
+	switch (ENVIRONMENT)
+	{
+		case 'development':
+			$active_group = 'default';
+		break;
 
-$active_group = 'default';
+		case 'production':
+			$active_group = 'production';
+		break;
+
+		default:
+			exit('The application environment is not set correctly.');
+	}
+}
 $active_record = TRUE;
 
 $db['default']['hostname'] = 'localhost';
-$db['default']['username'] = '';
+$db['default']['username'] = 'root';
 $db['default']['password'] = '';
-$db['default']['database'] = '';
+$db['default']['database'] = 'osa';
 $db['default']['dbdriver'] = 'mysql';
 $db['default']['dbprefix'] = '';
 $db['default']['pconnect'] = TRUE;
@@ -64,6 +78,11 @@ $db['default']['swap_pre'] = '';
 $db['default']['autoinit'] = TRUE;
 $db['default']['stricton'] = FALSE;
 
+// Production is largely the same as default
+$db['production'] = $db['default'];
+// The following are the difference
+$db['production']['username'] = 'something_else';
+$db['production']['password'] = 'something_else';
 
 /* End of file database.php */
 /* Location: ./application/config/database.php */
