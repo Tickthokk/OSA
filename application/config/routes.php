@@ -38,9 +38,10 @@
 |
 */
 
-$route['news/create'] = 'news/create';
-$route['news/(:any)'] = 'news/view/$1';
-$route['news'] = 'news';
+$route['search'] = 'search/main';
+$route['images/(:any)'] = 'images/view/$1';
+$route['games/(:any)'] = 'games/view/$1';
+$route['games'] = 'games/view';
 $route['(:any)'] = 'pages/view/$1';
 $route['default_controller'] = "pages/view";
 

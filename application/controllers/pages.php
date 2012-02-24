@@ -12,8 +12,8 @@ class Pages extends CI_Controller {
 
 		$data['title'] = ucfirst($page); // Cap the first letter
 
-		$this->load->view('templates/header', $data);
+		$this->load->view('wrapper/header', $data);
 		$this->load->view('pages/' . $page, $data);
-		$this->load->view('templates/footer', $data);
+		$this->load->view('wrapper/footer', $data);
 	}
 }
