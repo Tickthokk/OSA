@@ -38,6 +38,8 @@
 |
 */
 
+$route['game/(:num)'] = 'game/index/$1';
+$route['create/(:any)'] = 'create/$1';
 $route['search'] = 'search/main';
 $route['images/(:any)'] = 'images/view/$1';
 $route['games/(:any)'] = 'games/view/$1';
