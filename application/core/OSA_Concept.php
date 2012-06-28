@@ -24,45 +24,12 @@ abstract class OSA_Concept
 
 	public
 		$db = null,
-		$id = null;
+		$id = null,
+		$CI = null; // CodeIgniter Reference
 	
 	public function __construct($db) {
 		$this->db =& $db;
 		$this->_find_fields();
-	}
-
-	/**
-	 * __get - Magic Method
-	 * @param string $var
-	 * @return wanted value from database
-	 */
-	public function __get($var) {
-		if ( ! isset($this->_data[$var]))
-			if (method_exists($this, 'get_' . $var)) 
-				$this->{'get_' . $var}();
-			else
-				$this->_autoload($var);
-		
-		return $this->_data[$var];
-	}
-	
-	/**
-	 * __set - Magic Method
-	 * @param string $var
-	 * @param mixed $value
-	 */
-	public function __set($var, $value) {
-		if (empty($this->id))
-			return false;
-		
-		$this->_data[$var] = $value;
-		
-		if ( ! in_array($var, $this->_fields))
-			return false;
-		
-		$this->db
-			->where('id', (int) $this->id)
-			->update($this->_table, array($var => $value));
 	}
 	
 	/**
@@ -75,6 +42,21 @@ abstract class OSA_Concept
 	private function _find_fields() {
 		$result = $this->db->list_fields($this->_table);
 		$this->_fields = array_diff($result, array('id'));
+	}
+
+	/**
+	 * __get - Magic Method
+	 * @param string $var
+	 * @return wanted value from database
+	 */
+	public function __get($var) {
+		if ( ! isset($this->_data[$var]))
+			if (method_exists($this, '_get_' . $var)) 
+				$this->{'_get_' . $var}();
+			else
+				$this->_autoload($var);
+		
+		return $this->_data[$var];
 	}
 	
 	/**
@@ -104,6 +86,45 @@ abstract class OSA_Concept
 			->get()->first_row('array');
 		
 		$this->_data[$var] = $result[$var];
+	}
+	
+	/**
+	 * __set - Magic Method
+	 * @param string $var
+	 * @param mixed $value
+	 */
+	public function __set($var, $value) {
+		if (empty($this->id))
+			return false;
+		
+		# Save Locally
+		$this->_data[$var] = $value;
+		
+		# Check for a specific save function
+		# Otherwise, write straight to the database
+		if (method_exists($this, '_set_' . $var)) 
+			$this->{'_set_' . $var}($value);
+		else
+			$this->_autosave($var, $value);
+	}
+	
+	/**
+	 * Autosave
+	 * 	An extension of __set.  
+	 * 	Save's the requested variable into the field register and table
+	 * @param string $var
+	 * @see __set
+	 * @return nothing
+	 */
+	private function _autosave($var, $value) {
+		# Check to make sure it's a valid field
+		if ( ! in_array($var, $this->_fields))
+			return false;
+		
+		# Write to the database
+		$this->db
+			->where('id', (int) $this->id)
+			->update($this->_table, array($var => $value));
 	}
 	
 	/**

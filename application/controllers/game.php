@@ -9,17 +9,18 @@ class Game extends OSA_Controller
 		$this->load->model('Games_model', 'games');
 		$this->load->model('Achievements_model', 'achievements');
 
-		$game = $this->games->load($game_id);
-		$this->achievements->game_id = $game->id;
+		$this->game = $this->games->load($game_id);
+		#$reviews = $game->reviews->get_last(5);
+		$this->achievements->game_id = $this->game->id;
+
 		
 		# Header
-		$this->set_title($game->name);
-		
-		# Body
-		$this->set_more_data(compact(
-			'game'
-		));
+		$this->set_title($this->game->name);
 
+		# Body
+		$this->_data['game_id'] = $this->game->id;
+		$this->_data['achievements'] = $this->achievements->get_all();
+		
 		# Page Load
 		$this->_load_wrapper('game');
 	}

@@ -18,8 +18,14 @@
 				<div class = 'navbar-inner'>
 					<div class = 'container'>
 						<div id = 'user'>
+							<?php if ($this->user->is_logged) : ?>
 							<span class = 'text'>Logged in as</span>
-							<a href = '/user/Tickthokk'>Tickthokk</a>
+							<a href = '/user/<?php echo $this->user->username; ?>' title = 'My Account'><?php echo $this->user->username; ?></a>
+							<span class = 'text'>(<?php echo number_format($this->user->points, 0, '.', ','); ?>)</span>
+							<?php else : ?>
+							<a href = '/user/login'>Log In</a> | 
+							<a href = '/user/register'>Register</a>
+							<?php endif; ?>
 						</div>
 						<a class = 'brand' href = '/'>Old School Achievements</a>
 						
@@ -43,3 +49,16 @@
 		</div>
 			
 		<div class = 'container'>
+			<?php if (@$success) : ?>
+			<div class = 'alert alert-success'>
+				{success}
+			</div>
+			<?php elseif (@$warning) : ?>
+			<div class = 'alert alert-warning'>
+				{warning}
+			</div>
+			<?php elseif (@$error) : ?>
+			<div class = 'alert alert-error'>
+				{error}
+			</div>
+			<?php endif; ?>

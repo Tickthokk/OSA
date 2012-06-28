@@ -20,12 +20,8 @@ class Games_model extends CI_Model
 		if ($game_id <= 0 || ! is_numeric($game_id))
 			return; # TODO nice error: Invalid Game
 		
-		# Manually include necessary files
-		include_once(APPPATH . 'core/OSA_Concept.php');
-		include_once(APPPATH . 'models/game_model.php');
-		
 		if ( ! isset($this->_games[$game_id]))
-			$this->_games[$game_id] = new Game_model($game_id, $this->db);
+			$this->_games[$game_id] = $this->concept->load('game', $game_id);
 		
 		return $this->_games[$game_id];
 	}

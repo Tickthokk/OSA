@@ -38,13 +38,28 @@
 |
 */
 
+## USERS
+$route['user/login'] = 'user/login';
+$route['user/logout'] = 'user/logout';
+$route['user/register'] = 'user/register';
+$route['user/forgotten-password'] = 'user/forgotten_password';
+$route['user/(:any)'] = 'user/view/$1';
+$route['user'] = 'user/main';
+
+## GAME
 $route['game/(:num)'] = 'game/index/$1';
-$route['create/(:any)'] = 'create/$1';
+
 $route['search'] = 'search/main';
 $route['images/(:any)'] = 'images/view/$1';
 $route['games/(:any)'] = 'games/view/$1';
 $route['games'] = 'games/view';
+
+
+$route['create/(:any)'] = 'create/$1';
+
+## DEFAULTS
 $route['(:any)'] = 'pages/view/$1';
+
 $route['default_controller'] = "pages/view";
 
 /* End of file routes.php */

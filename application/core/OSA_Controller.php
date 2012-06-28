@@ -26,6 +26,11 @@ class OSA_Controller extends CI_Controller
 			),
 			'page_search' => ''
 		);
+
+		# Manually include the necessary files
+		$this->load->model('Concept_model', 'concept');
+		
+		$this->user = $this->concept->load('user', $this->session->userdata('user_id'));
 	}
 
 	public function set_more_data($array)
@@ -40,9 +45,15 @@ class OSA_Controller extends CI_Controller
 
 	public function _load_wrapper($page_path)
 	{
-		$this->load->view('wrapper/header', $this->_data);
-		$this->load->view($page_path, $this->_data);
-		$this->load->view('wrapper/footer', $this->_data);
+		# Common Variables
+		$this->_data['success'] = $this->session->flashdata('success');
+		$this->_data['warning'] = $this->session->flashdata('warning');
+		$this->_data['error'] = $this->session->flashdata('error');
+
+		# Page Display
+		$this->parser->parse('wrapper/header', $this->_data);
+		$this->parser->parse($page_path, $this->_data);
+		$this->parser->parse('wrapper/footer', $this->_data);
 	}
 
 }
