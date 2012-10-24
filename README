@@ -1,4 +1,5 @@
-OSA
-====
+CodeIgniter "system" folder Required:
+Placed at ../CodeIgniter/system locally
 
-Old School Achievements
+SASS Required:
+@see assets/start_sass.bat

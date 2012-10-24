@@ -1,0 +1,31 @@
+﻿<ImageProcessor>
+	<version>1</version>
+	<useopen>false</useopen>
+	<includesub>false</includesub>
+	<source>C:\Users\nwright\Dropbox\github\OSA\_trinkets\64x64icons\originals\prep\big</source>
+	<open>false</open>
+	<saveinsame>false</saveinsame>
+	<dest>C:\Users\nwright\Dropbox\github\OSA\_trinkets\64x64icons\originals\prep</dest>
+	<jpeg>true</jpeg>
+	<psd>false</psd>
+	<tiff>false</tiff>
+	<lzw>false</lzw>
+	<converticc>false</converticc>
+	<q>5</q>
+	<max>true</max>
+	<jpegresize>true</jpegresize>
+	<jpegw>64</jpegw>
+	<jpegh>64</jpegh>
+	<psdresize>false</psdresize>
+	<psdw></psdw>
+	<psdh></psdh>
+	<tiffresize>false</tiffresize>
+	<tiffw></tiffw>
+	<tiffh></tiffh>
+	<runaction>false</runaction>
+	<actionset>Default Actions</actionset>
+	<action>Vignette (selection)</action>
+	<info></info>
+	<icc>true</icc>
+	<keepstructure>false</keepstructure>
+</ImageProcessor>

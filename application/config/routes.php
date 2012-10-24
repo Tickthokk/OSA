@@ -38,10 +38,46 @@
 |
 */
 
-$route['news/create'] = 'news/create';
-$route['news/(:any)'] = 'news/view/$1';
-$route['news'] = 'news';
+## Admin Section
+$route['admin'] = 'admin/admin/dashboard';
+$route['admin/(:any)'] = 'admin/admin/$1';
+
+## USERS
+$route['user/login'] = 'user/login';
+$route['user/logout'] = 'user/logout';
+$route['user/register'] = 'user/register';
+$route['user/forgotten-password'] = 'user/forgotten_password';
+$route['user/(:any)'] = 'user/view/$1';
+$route['user'] = 'user/main';
+
+## GAME
+$route['game/(:num)'] = 'game/index/$1';
+$route['game/(:any)'] = 'game/$1';
+
+$route['search'] = 'search/main';
+$route['images/(:any)'] = 'images/view/$1';
+$route['games/(:any)'] = 'games/view/$1';
+$route['games'] = 'games/view';
+
+$route['create/(:any)'] = 'create/$1';
+
+$route['flag/(:any)'] = 'flag/run/$1';
+
+# Achievements - Specific
+$route['achievement/(:num)'] = 'achievement/view/$1';
+
+# Achievements - Catchall
+$route['achievement/(:any)'] = 'achievement/$1';
+
+#$route['achievement/vote/(:any)/(:num)'] = 'achievement/vote/$1/$2';
+#$route['achievement/achieve/(:num)'] = 'achievement/achieve/$1';
+#$route['achievement/comment/(:num)'] = 'achievement/comment/$1';
+
+$route['test/(:any)'] = 'test/$1';
+
+## DEFAULTS
 $route['(:any)'] = 'pages/view/$1';
+
 $route['default_controller'] = "pages/view";
 
 /* End of file routes.php */

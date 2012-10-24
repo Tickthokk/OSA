@@ -34,25 +34,7 @@
  * Different environments will require different levels of error reporting.
  * By default development will show errors but testing and live will hide them.
  */
-
-if (defined('ENVIRONMENT'))
-{
-	switch (ENVIRONMENT)
-	{
-		case 'development':
-			error_reporting(E_ALL);
-		break;
-	
-		case 'testing':
-		case 'production':
-			error_reporting(0);
-		break;
-
-		default:
-			exit('The application environment is not set correctly.');
-	}
-}
-
+	# AND
 /*
  *---------------------------------------------------------------
  * SYSTEM FOLDER NAME
@@ -63,7 +45,26 @@ if (defined('ENVIRONMENT'))
  * as this file.
  *
  */
-	$system_path = 'system';
+
+if (defined('ENVIRONMENT'))
+{
+	switch (ENVIRONMENT)
+	{
+		case 'development':
+			error_reporting(E_ALL);
+			$system_path = '../CodeIgniter/system';
+		break;
+	
+		case 'testing':
+		case 'production':
+			error_reporting(0);
+			$system_path = '../CodeIgniter/system';
+		break;
+
+		default:
+			exit('The application environment is not set correctly.');
+	}
+}
 
 /*
  *---------------------------------------------------------------
@@ -206,7 +207,13 @@ if (defined('ENVIRONMENT'))
  * And away we go...
  *
  */
-require_once BASEPATH.'core/CodeIgniter.php';
+#require_once BASEPATH.'core/CodeIgniter.php';
+
+try {
+	require_once BASEPATH.'core/CodeIgniter.php';
+} catch (Exception $e) {
+	echo 'Caught exception: ',  $e->getMessage(), "\n";
+}
 
 /* End of file index.php */
 /* Location: ./index.php */
