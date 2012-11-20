@@ -1,5 +1,9 @@
 CodeIgniter "system" folder Required:
 Placed at ../CodeIgniter/system locally
 
-SASS Required:
+Uses SASS
 @see assets/start_sass.bat
+
+Missing Folders, for secrecy:
+application/config/production/
+application/config/qa/

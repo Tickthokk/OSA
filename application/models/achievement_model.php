@@ -18,7 +18,7 @@ class Achievement_model extends OSA_Concept
 		return $this->db
 			->select('username')
 			->from('users')
-			->where('id', $this->userId)
+			->where('id', $this->user_id)
 			->get()->row('username');
 	}
 
@@ -62,25 +62,25 @@ class Achievement_model extends OSA_Concept
 
 		// Decrement the Games achievement tally
 		$this->db
-			->set('achievementTally', 'achievementTally - 1', FALSE)
-			->where('id', $data['gameId'])
-			->where('achievementTally > 0')
+			->set('achievement_tally', 'achievement_tally - 1', FALSE)
+			->where('id', $data['game_id'])
+			->where('achievement_tally > 0')
 			->update('games');
 
 		### Comments
 
 		// Delete achievement_comments
 		$this->db
-			->where('achievementId', $this->id)
+			->where('achievement_id', $this->id)
 			->delete('achievement_comments');
 
 		### Achievers
 
 		// Get achievers
 		$achievers = $this->db
-			->select('GROUP_CONCAT(userId) AS achievers', FALSE)
+			->select('GROUP_CONCAT(user_id) AS achievers', FALSE)
 			->from('achievement_users')
-			->where('achievementId', $this->id)
+			->where('achievement_id', $this->id)
 			->get()->row('achievers');
 
 		// Group concat will return 1,2,3,4
@@ -88,47 +88,47 @@ class Achievement_model extends OSA_Concept
 
 		// Delete achiever records
 		$this->db
-			->where('achievementId', $this->id)
+			->where('achievement_id', $this->id)
 			->delete('achievement_users');
 
 		### Users
 
 		// Decrement the user's achievement tally
 		$this->db
-			->set('achievementTally', 'achievementTally - 1', FALSE)
+			->set('achievement_tally', 'achievement_tally - 1', FALSE)
 			->where_in('id', $achievers)
-			->where('achievementTally > 0')
+			->where('achievement_tally > 0')
 			->update('users');
 
 		### Tags / Tags Log
 
 		// Delete achievement tags
 		$this->db
-			->where('achievementId', $this->id)
+			->where('achievement_id', $this->id)
 			->delete('achievement_tags');
 
 		// Delete tag logs
-		// Run a general query of "tagId doesn't exist anymore, so delete it"
+		// Run a general query of "tag_id doesn't exist anymore, so delete it"
 		$this->db->query(
 			'DELETE atl.* FROM ' . $this->db->dbprefix('achievement_tag_log') . ' AS atl ' . 
-			'LEFT JOIN ' . $this->db->dbprefix('achievement_tags') . ' AS at ON at.id = atl.achievementTagId ' . 
+			'LEFT JOIN ' . $this->db->dbprefix('achievement_tags') . ' AS at ON at.id = atl.achievement_tag_id ' . 
 			'WHERE at.id IS NULL'
 		);
 	}
 
 	/**
 	 * System Exclusive?
-	 *  Find the systemId and system name
+	 *  Find the system_id and system name
 	 */
 	public function system_exclusive()
 	{
-		if ( ! $this->systemExclusive)
+		if ( ! $this->system_exclusive)
 			return FALSE;
 
 		return $this->db
 			->select('id, slug, name')
 			->from('systems')
-			->where('id', $this->systemExclusive)
+			->where('id', $this->system_exclusive)
 			->get()->row_array();
 	}
 
@@ -150,7 +150,7 @@ class Achievement_model extends OSA_Concept
 		return $this->db
 			->select('COUNT(au.id) AS `count`', FALSE)
 			->from('achievement_users AS au')
-			->where('au.achievementId', $this->d)
+			->where('au.achievement_id', $this->d)
 			->get()->row('count');
 	}
 
@@ -165,11 +165,11 @@ class Achievement_model extends OSA_Concept
 	{
 		// Prep query
 		$this->db
-			->select('u.id, u.username, u.achievementTally, au.achievedAt')
+			->select('u.id, u.username, u.achievement_tally, au.achieved')
 			->from('achievement_users AS au')
-			->join('users AS u', 'u.id = au.userId')
-			->where('au.achievementId', $this->id)
-			->order_by('au.achievedAt', 'desc');
+			->join('users AS u', 'u.id = au.user_id')
+			->where('au.achievement_id', $this->id)
+			->order_by('au.achieved', 'desc');
 
 		// Limit if available
 		if ($count)
@@ -192,8 +192,8 @@ class Achievement_model extends OSA_Concept
 		$achieved_id = $this->db
 			->select('id')
 			->from('achievement_users')
-			->where('achievementId', $this->id)
-			->where('userId', $user_id)
+			->where('achievement_id', $this->id)
+			->where('user_id', $user_id)
 			->get()->row('id');
 
 		return (bool) $achieved_id;
@@ -211,8 +211,8 @@ class Achievement_model extends OSA_Concept
 			return FALSE;
 
 		$this->db->insert('achievement_users', array(
-			'achievementId' => $this->id,
-			'userId' => $user_id
+			'achievement_id' => $this->id,
+			'user_id' => $user_id
 		));
 
 		return TRUE;
@@ -272,17 +272,17 @@ class Achievement_model extends OSA_Concept
 		foreach ($tag_ids as $tag_id)
 		{
 			$this->db->insert('achievement_tags', array(
-				'userId' => $user_id,
-				'achievementId' => $this->id,
-				'tagId' => $tag_id,
+				'user_id' => $user_id,
+				'achievement_id' => $this->id,
+				'tag_id' => $tag_id,
 				'approval' => 1 // Initial insertion, by default user always votes for its inclusion
 			));
 
 			$achievement_tag_id = $this->db->insert_id();
 
 			$achievement_tag_log[] = array(
-				'achievementTagId' => $achievement_tag_id,
-				'userId' => $user_id,
+				'achievement_tag_id' => $achievement_tag_id,
+				'user_id' => $user_id,
 				'approval' => 1 // Initial insertion, by default the user always votes for its inclusion
 			);
 		}
@@ -300,12 +300,12 @@ class Achievement_model extends OSA_Concept
 	public function get_tags($user_id)
 	{
 		return $this->db
-			->select('at.id, t.id AS tagId, t.name, SUM(atl.approval) AS approval, uatl.approval AS user_approval, t.approved AS admin_approval')
+			->select('at.id, t.id AS tag_id, t.name, SUM(atl.approval) AS approval, uatl.approval AS user_approval, t.approved AS admin_approval')
 			->from('achievement_tags AS at')
-			->join('tags AS t', 't.id = at.tagId')
-			->join('achievement_tag_log AS atl', 'atl.achievementTagId = at.id', 'LEFT') # LEFT JOIN
-			->join('achievement_tag_log AS uatl', 'uatl.achievementTagId = at.id AND uatl.userId = ' . (int) $user_id, 'LEFT') # LEFT JOIN
-			->where('at.achievementId', $this->id)
+			->join('tags AS t', 't.id = at.tag_id')
+			->join('achievement_tag_log AS atl', 'atl.achievement_tag_id = at.id', 'LEFT') # LEFT JOIN
+			->join('achievement_tag_log AS uatl', 'uatl.achievement_tag_id = at.id AND uatl.user_id = ' . (int) $user_id, 'LEFT') # LEFT JOIN
+			->where('at.achievement_id', $this->id)
 			->group_by('at.id')
 			->order_by('approval', 'desc')
 			->get()->result_array();
@@ -324,8 +324,8 @@ class Achievement_model extends OSA_Concept
 		$vote_id = $this->db
 			->select('id')
 			->from('achievement_tag_log')
-			->where('achievementTagId', $achievement_tag_id)
-			->where('userId', $user_id)
+			->where('achievement_tag_id', $achievement_tag_id)
+			->where('user_id', $user_id)
 			->get()->row('id');
 
 		if ($vote_id)
@@ -342,8 +342,8 @@ class Achievement_model extends OSA_Concept
 		else
 		{
 			$this->db->insert('achievement_tag_log', array(
-				'achievementTagId' => $achievement_tag_id,
-				'userId' => $user_id,
+				'achievement_tag_id' => $achievement_tag_id,
+				'user_id' => $user_id,
 				'approval' => $approval
 			));
 
@@ -371,11 +371,15 @@ class Achievement_model extends OSA_Concept
 	{
 		// Prep Query
 		$this->db
-			->select('SQL_CALC_FOUND_ROWS ac.id, ac.userId, u.username, ac.added, ac.modified, ac.comment', FALSE)
+			->select('SQL_CALC_FOUND_ROWS ac.id, ac.added_by, u.username, ac.added, ac.modified_by, mu.username AS mod_username, ac.modified, ac.comment', FALSE)
+			->select('(SELECT COUNT(*) FROM flags AS f JOIN flag_sections AS fs ON fs.id = f.section_id AND fs.name = "achievement_comment" WHERE f.section_id = ac.id AND f.solved IS NULL) AS flag_count', FALSE)
+			->select('(SELECT COUNT(*) FROM flags AS f JOIN flag_sections AS fs ON fs.id = f.section_id AND fs.name = "achievement_comment_lock" WHERE f.section_id = ac.id AND f.solved IS NULL) AS flag_locked', FALSE)
 			->from('achievement_comments AS ac')
-			->join('users AS u', 'u.id = ac.userId')
-			->where('ac.achievementId', $this->id)
-			->order_by('ac.added', 'DESC')
+			->join('users AS u', 'u.id = ac.added_by')
+			->join('users AS mu', 'mu.id = ac.modified_by', 'LEFT')
+			->where('ac.achievement_id', $this->id)
+			->group_by('ac.id')
+			->order_by('ac.added DESC, ac.id DESC')
 			->limit($row_count, $offset);
 
 		// Add to query if $top_id is set
@@ -397,7 +401,7 @@ class Achievement_model extends OSA_Concept
 	 *  When a user comments on an achievement
 	 * @param integer $user_id
 	 * @param string $comment
-	 * @param integer $in_reply_to_id >> basically "ParentId" for comments
+	 * @param integer $in_reply_to_id >> basically "Parent_id" for comments
 	 * @return boolean >> success
 	 */
 	public function add_comment($user_id, $comment/*, $in_reply_to_id = NULL*/)
@@ -405,8 +409,8 @@ class Achievement_model extends OSA_Concept
 		$this->db
 			->set('added', 'NOW()', FALSE)
 			->insert('achievement_comments', array(
-				'achievementId' => $this->id,
-				'userId' => $user_id,
+				'achievement_id' => $this->id,
+				'added_by' => $user_id,
 				'comment' => $comment
 			));
 
@@ -422,15 +426,15 @@ class Achievement_model extends OSA_Concept
 	 */
 	public function edit_comment($user_id, $achievement_comment_id, $comment)
 	{
-		// Check if they own this comment (also "validates" userId)
+		// Check if they own this comment (also "validates" user_id)
 		if ( ! $this->is_their_comment($user_id, $achievement_comment_id))
 			return FALSE;
 
 		// Update the comment
 		$this->db
-			->set('modified', 'NOW()', FALSE)
 			->update('achievement_comments', array(
-				'comment' => $comment 
+				'comment' => $comment,
+				'modified_by' => $user_id
 			), array(
 				'id' => $achievement_comment_id
 			));
@@ -446,7 +450,7 @@ class Achievement_model extends OSA_Concept
 	 */
 	public function delete_comment($user_id, $achievement_comment_id)
 	{
-		// Check if they own this comment (also "validates" userId)
+		// Check if they own this comment (also "validates" user_id)
 		if ( ! $this->is_their_comment($user_id, $achievement_comment_id))
 			return FALSE;
 
@@ -467,12 +471,18 @@ class Achievement_model extends OSA_Concept
 		if (empty($user_id))
 			return FALSE;
 
+		// Is the user a moderator?
+		$CI =& get_instance();
+		$u = $CI->concept->load('user', $user_id);
+		if ($u->is_moderator())
+			return TRUE;
+
 		// Is this their comment?
 		$is_their_comment = $this->db
 			->select('id')
 			->from('achievement_comments')
 			->where('id', $achievement_comment_id)
-			->where('userId', $user_id)
+			->where('added_by', $user_id)
 			->get()->row('id');
 
 		if ( ! $is_their_comment)

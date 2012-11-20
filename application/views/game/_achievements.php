@@ -1,5 +1,5 @@
 <?php foreach ($achievements as $a) : ?>
-<div class = 'well achievement <?php echo $a['iDidIt'] ? 'achieved' : 'unachieved'; ?>'>
+<div class = 'well achievement <?php echo $a['iDidIt'] ? 'achieved' : 'unachieved'; ?>' data-id = '<?php echo $a['id']; ?>'>
 	<a href = '/achievement/<?php echo $a['id']; ?>'><img src = '/assets/images/icons/<?php echo $a['icon']; ?>' class = 'icon'></a>
 	<div class = 'info'>
 		<div class = 'flr'>
@@ -19,7 +19,7 @@
 			</div>
 			<?php endif; ?>
 		</div>
-		<h2 class = 'title'><a href = '/achievement/<?php echo $a['id']; ?>'><?php echo truncate_text($a['name'], 35); ?></a></h2>
+		<h2 class = 'title'><a href = '/achievement/<?php echo $a['id']; ?>'><?php echo truncate_text($a['name'], 30); ?></a></h2>
 		
 		<p class = 'description'><?php echo truncate_text(strip_tags(markdown($a['description'])), 80); ?></p>
 

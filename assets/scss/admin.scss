@@ -1,0 +1,17 @@
+#links {
+	i.admin_event {
+		float: right;
+		margin-right: 10px;
+	}
+}
+
+#achievements {
+	.achievement {
+		position: relative;
+		.icon-trash {
+			position: absolute;
+			right: 3px;
+			bottom: 3px;
+		}
+	}
+}

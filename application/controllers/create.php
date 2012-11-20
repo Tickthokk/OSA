@@ -62,9 +62,9 @@ class Create extends OSA_Controller
 		{
 			// Validation Succeeded
 			// Create the game [uses post data]
-			$gameId = $this->games->create();
+			$game_id = $this->games->create();
 
-			redirect('/game/' . $gameId . '/' . $this->input->post('slug'), 'location');
+			redirect('/game/' . $game_id . '/' . $this->input->post('slug'), 'location');
 		}
 	}
 

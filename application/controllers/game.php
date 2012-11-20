@@ -21,7 +21,7 @@ class Game extends OSA_Controller
 		$this->set_title($this->game->name);
 
 		# Body
-		$this->_data['wikiSlug'] = $this->game->wikiSlug;
+		$this->_data['wiki_slug'] = $this->game->wiki_slug;
 		$this->_data['links'] = $this->game->get_links();
 		$this->_data['game_id'] = $this->game->id;
 		$this->_data['systems'] = $this->game->get_systems();
@@ -73,9 +73,9 @@ class Game extends OSA_Controller
 		{
 			// Validation Succeeded
 			// Create the game [uses post data]
-			$gameId = $this->games->create();
+			$game_id = $this->games->create();
 
-			redirect('/game/' . $gameId . '/' . $this->input->post('slug'), 'location');
+			redirect('/game/' . $game_id . '/' . $this->input->post('slug'), 'location');
 		}
 	}
 
@@ -128,7 +128,7 @@ class Game extends OSA_Controller
 
 		$this->game = $this->games->load($game_id);
 
-		$this->_data['wikiSlug'] = $this->game->wikiSlug;
+		$this->_data['wiki_slug'] = $this->game->wiki_slug;
 		$this->_data['links'] = $this->game->get_links();
 
 		$this->_ajax_return(array(

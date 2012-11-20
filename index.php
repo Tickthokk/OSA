@@ -55,7 +55,7 @@ if (defined('ENVIRONMENT'))
 			$system_path = '../CodeIgniter/system';
 		break;
 	
-		case 'testing':
+		case 'qa':
 		case 'production':
 			error_reporting(0);
 			$system_path = '../CodeIgniter/system';

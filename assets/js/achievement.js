@@ -192,7 +192,7 @@ var achievement = {
 		var btngroup = el.parent('.btn-group');
 
 		var id = btngroup.data('id');
-		var name = btngroup.data('el').parent('span').data('name');
+		var name = btngroup.data('el').data('name');
 
 		// Activate Keep
 		achievement.vote_button_style('add', btngroup, 'keep');
@@ -222,7 +222,7 @@ var achievement = {
 		var btngroup = el.parent('.btn-group');
 
 		var id = btngroup.data('id');
-		var name = btngroup.data('el').parent('span').data('name');
+		var name = btngroup.data('el').data('name');
 
 		// Activate Drop
 		achievement.vote_button_style('add', btngroup, 'drop');

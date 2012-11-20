@@ -13,12 +13,67 @@ class User extends OSA_Controller
 
 	public function view($username)
 	{
-		$this->_data['username'] = $this->user->username;
+		$this->load->helper('markdown');
+		$user = $this->concept->load('user', $username);
+
+		if ( ! $user->id)
+		{
+			$this->session->set_flashdata('error', 'That user does not exist');
+			redirect('/');
+		}
+
+		$this->_data['username'] = $user->username;
+		$this->_data['user_id'] = $user->id;
 
 		$this->_data['success'] = $this->session->flashdata('success');
 
+		// Get their data
+		$this->load->model('Achievements_model', 'achievements');
+		$this->_data['achievements'] = $this->achievements->get_user_achievements($user->id);
+		$this->_data['achievement_count'] = $this->achievements->user_achievements_count;
+
+		$this->_data['achievement_comments'] = $this->achievements->get_user_achievement_comments($user->id);
+		$this->_data['comments_count'] = $this->achievements->user_achievement_comments_count;
+
+		$this->_data['created_achievements'] = $this->achievements->get_user_created_achievements($user->id);
+		$this->_data['created_count'] = $this->achievements->user_created_achievements_count;
+
+		// Special javascript
+		$this->_data['js'][] = 'user_view';
+
 		# Page Load
 		$this->_load_wrapper('user/view');
+	}
+
+	public function achievements($user_id, $per_page, $current)
+	{
+		$this->_ajax_only();
+
+		$this->load->model('Achievements_model', 'achievements');
+		$this->_data['achievements'] = $this->achievements->get_user_achievements($user_id, $per_page, $current);
+
+		$this->_ajax_return(array('html' => $this->_preview('user/view/achievements')));
+	}
+
+	public function comments($user_id, $per_page, $current)
+	{
+		$this->_ajax_only();
+		$this->load->helper('markdown');
+
+		$this->load->model('Achievements_model', 'achievements');
+		$this->_data['achievement_comments'] = $this->achievements->get_user_achievement_comments($user_id, $per_page, $current);
+
+		$this->_ajax_return(array('html' => $this->_preview('user/view/achievement_comments')));
+	}
+
+	public function created_achievements($user_id, $per_page, $current)
+	{
+		$this->_ajax_only();
+
+		$this->load->model('Achievements_model', 'achievements');
+		$this->_data['created_achievements'] = $this->achievements->get_user_created_achievements($user_id, $per_page, $current);
+
+		$this->_ajax_return(array('html' => $this->_preview('user/view/created_achievements')));
 	}
 
 	public function login()

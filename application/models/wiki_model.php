@@ -18,9 +18,9 @@ class Wiki_model extends CI_Model
 
 	}
 
-	public function image_grab($slug, $wikiSlug)
+	public function image_grab($slug, $wiki_slug)
 	{
-		$wikiLink = $this->wiki_base . $wikiSlug;
+		$wikiLink = $this->wiki_base . $wiki_slug;
 
 		# Use CURL to get the HTML of the wikipedia page.
 		$ch = curl_init();
@@ -51,16 +51,16 @@ class Wiki_model extends CI_Model
 		return $filename;
 	}
 	
-	/*public function wikipedia_data_grab($slug, $wikiSlug)
+	/*public function wikipedia_data_grab($slug, $wiki_slug)
 	{
 
 		# TEMP
-		$wikiSlug = 'Demon%27s_Souls';
+		$wiki_slug = 'Demon%27s_Souls';
 
 		// Use the Mobile version for easier parsing:
 		// http://en.m.wikipedia.org/wiki/Final_Fantasy_(video_game)
 
-		$wikiLink = $this->wiki_base . $wikiSlug;
+		$wikiLink = $this->wiki_base . $wiki_slug;
 
 		# Use CURL to get the HTML of the wikipedia page.
 		$ch = curl_init();

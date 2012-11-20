@@ -53,8 +53,8 @@ var create = {
 			$('#tags').tagit('createTag', text);
 		});
 
-		$('input[name=systemExclusiveYes]').change(function(e) {
-			$('#systemExclusive')[$(this).is(':checked') ? 'show' : 'hide']();
+		$('input[name=system_exclusive_yes]').change(function(e) {
+			$('#system_exclusive')[$(this).is(':checked') ? 'show' : 'hide']();
 		}).trigger('change');
 
 		$('#icon-select').change(function() {

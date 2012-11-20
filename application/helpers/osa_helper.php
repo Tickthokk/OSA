@@ -36,7 +36,7 @@ function truncate_text($text, $limit, $elipses = '...', $break = ' ')
 		if (FALSE !== ($breakpoint = strrpos($text, $break)))
 			$text = substr($text, 0, $breakpoint) . $elipses;
 	}
-
+	
 	return $text;
 }
 

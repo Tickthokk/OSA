@@ -2,6 +2,7 @@
 
 class Admin extends OSA_Controller
 {
+
 	public function __construct()
 	{
 		parent::__construct();
@@ -30,6 +31,34 @@ class Admin extends OSA_Controller
 		$this->_load_wrapper('admin/dashboard');
 	}
 
+	public function unapproved($what)
+	{
+		$this->{'_unapproved_' . $what}();
+	}
+
+	private function _unapproved_links()
+	{
+		
+	}
+
+	public function flagged($what)
+	{
+		$this->{'_flagged_' . $what}();
+	}
+
+	private function _flagged_links()
+	{
+
+	}
+
+	private function _flagged_games()
+	{
+
+	}
+
+
+
+
 	public function fix($what)
 	{
 		$this->{'_fix_' . $what}();
@@ -48,14 +77,16 @@ class Admin extends OSA_Controller
 			$count = $this->db
 				->select('COUNT(id) AS `count`')
 				->from('achievements')
-				->where('gameId', $g['id'])
+				->where('game_id', $g['id'])
 				->get()->row('count');
 
 			$this->db
-				->set('achievementTally', $count)
+				->set('achievement_tally', $count)
 				->where('id', $g['id'])
 				->update('games');
 		}
+
+		$this->session->set_flashdata('success', 'Game Tallys Fixed');
 		
 		redirect('admin');
 	}
@@ -73,14 +104,16 @@ class Admin extends OSA_Controller
 			$count = $this->db
 				->select('COUNT(id) AS `count`')
 				->from('achievement_users')
-				->where('userId', $u['id'])
+				->where('user_id', $u['id'])
 				->get()->row('count');
 
 			$this->db
-				->set('achievementTally', $count)
+				->set('achievement_tally', $count)
 				->where('id', $g['id'])
 				->update('users');
 		}
+
+		$this->session->set_flashdata('success', 'User Tallys Fixed');
 		
 		redirect('admin');
 
@@ -138,10 +171,10 @@ class Admin extends OSA_Controller
 			
 			$this->db
 				->insert('games', array(
-					'firstLetter' => strtolower(substr($name, 0, 1)),
+					'first_letter' => strtolower(substr($name, 0, 1)),
 					'name' => $name,
 					'slug' => url_title($name, '-', true),
-					'wikiSlug' => url_title($name, '_')
+					'wiki_slug' => url_title($name, '_')
 				));
 
 			// Link a system to it [Max 3]
@@ -158,8 +191,8 @@ class Admin extends OSA_Controller
 
 				$this->db
 					->insert('system_games', array(
-						'gameId' => $game_id,
-						'systemId' => $system_id
+						'game_id' => $game_id,
+						'system_id' => $system_id
 					));
 
 				// 50% chance to link it to a 2nd or 3rd system
@@ -225,15 +258,15 @@ class Admin extends OSA_Controller
 				// 20% chance for system exclusive
 				if (rand(0,99) < 20)
 				{
-					$systemIds = $this->db
-						->select('GROUP_CONCAT(systemId) AS `ids`', FALSE)
+					$system_ids = $this->db
+						->select('GROUP_CONCAT(system_id) AS `ids`', FALSE)
 						->from('system_games')
-						->where('gameId', $game['id'])
+						->where('game_id', $game['id'])
 						->get()->row('ids');
-					$systemIds = explode(',', $systemIds);
-					shuffle($systemIds);
+					$system_ids = explode(',', $system_ids);
+					shuffle($system_ids);
 
-					$this->db->set('systemExclusive', $systemIds[0]);
+					$this->db->set('system_exclusive', $system_ids[0]);
 				}
 
 				shuffle($icons);
@@ -243,8 +276,8 @@ class Admin extends OSA_Controller
 				$this->db
 					->set('added', 'NOW()', FALSE)
 					->insert('achievements', array(
-						'userId' => $user_id,
-						'gameId' => $game['id'],
+						'user_id' => $user_id,
+						'game_id' => $game['id'],
 						'name' => $name,
 						'description' => $description,
 						'icon' => $icons[0]
@@ -264,19 +297,19 @@ class Admin extends OSA_Controller
 					$this->db
 						->set('added', 'NOW()', FALSE)
 						->insert('achievement_tags', array(
-							'userId' => $user_id,
-							'achievementId' => $achievement_id,
-							'tagId' => $ut,
+							'user_id' => $user_id,
+							'achievement_id' => $achievement_id,
+							'tag_id' => $ut,
 							'approval' => 1
 						));
 
-					$atId = $this->db->insert_id();
+					$at_id = $this->db->insert_id();
 
 					$this->db
 						->set('when', 'NOW()', FALSE)
 						->insert('achievement_tag_log', array(
-							'achievementTagId' => $atId,
-							'userId' => $user_id,
+							'achievement_tag_id' => $at_id,
+							'user_id' => $user_id,
 							'approval' => 1
 						));
 				}
@@ -286,14 +319,14 @@ class Admin extends OSA_Controller
 				foreach (range(0, rand($count - 5, $count + 5)) as $i)
 				{
 					$this->db
-						->set('achievedAt', 'NOW()', FALSE)
+						->set('achieved', 'NOW()', FALSE)
 						->insert('achievement_users', array(
-							'userId' => $users[$i],
-							'achievementId' => $achievement_id
+							'user_id' => $users[$i],
+							'achievement_id' => $achievement_id
 						));
 
 					$this->db
-						->set('achievementTally', 'achievementTally + 1', FALSE)
+						->set('achievement_tally', 'achievement_tally + 1', FALSE)
 						->where('id', $users[$i])
 						->update('users');
 				}
@@ -316,8 +349,8 @@ class Admin extends OSA_Controller
 					$this->db
 						->set('added', 'NOW()', FALSE)
 						->insert('achievement_comments', array(
-							'achievementId' => $achievement_id,
-							'userId' => $user_id,
+							'achievement_id' => $achievement_id,
+							'user_id' => $user_id,
 							'comment' => $comment
 						));
 				}
@@ -327,6 +360,66 @@ class Admin extends OSA_Controller
 		}
 
 		redirect('admin');
+	}
+
+	/*****************
+		AJAX CALLS
+	******************/
+
+	// Resolve something like: /admin/game/link/info/' + id,
+	public function game($sub, $type, $id)
+	{
+		$this->_ajax_only();
+
+		$args = func_get_args();
+		$func = '_game_' . array_shift($args) . '_' . array_shift($args);
+		
+		if (method_exists($this, $func))
+			call_user_func_array(array($this, $func), $args);
+	}
+
+	// /admin/game/link/info/<ID>
+	private function _game_link_info($id = NULL)
+	{
+		$gl = $this->concept->load('game_links', $id);
+
+		$data = $gl->get_all();
+		$data['submitted_by_name'] = $gl->get_submitter_name();
+		$data['approved_by_name'] = $data['approved_by'] ? $gl->get_approver_name() : 'N/A';
+		$data['id'] = $id;
+		$data['flags'] = $gl->get_flags();
+		
+		$this->_ajax_return($data);
+	}
+
+	// /admin/game/link/delete/<ID>
+	private function _game_link_delete($id = NULL)
+	{
+		$gl = $this->concept->load('game_links', $id);
+		$gl->delete();
+	}
+
+	// /admin/game/link/approve/<ID>
+	private function _game_link_approve($id = NULL)
+	{
+		$gl = $this->concept->load('game_links', $id);
+		$gl->approve($this->user->id);
+	}
+
+	// /admin/game/link/approve/<ID>
+	private function _game_link_clear_flags($id = NULL)
+	{
+		$gl = $this->concept->load('game_links', $id);
+		$gl->clear_flags($this->user->id);
+	}
+
+	// /admin/game/achievement/delete/<ID>
+	private function _game_achievement_delete($id = NULL)
+	{
+		$this->load->model('Achievements_model', 'achievements');
+		$a = $this->achievements->load($id);
+		$a->allow_deletion();
+		$a->delete();
 	}
 
 }

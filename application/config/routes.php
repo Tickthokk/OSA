@@ -47,6 +47,9 @@ $route['user/login'] = 'user/login';
 $route['user/logout'] = 'user/logout';
 $route['user/register'] = 'user/register';
 $route['user/forgotten-password'] = 'user/forgotten_password';
+$route['user/achievements/(:any)'] = 'user/achievements/$1';
+$route['user/comments/(:any)'] = 'user/comments/$1';
+$route['user/created_achievements/(:any)'] = 'user/created_achievements/$1';
 $route['user/(:any)'] = 'user/view/$1';
 $route['user'] = 'user/main';
 
@@ -69,11 +72,8 @@ $route['achievement/(:num)'] = 'achievement/view/$1';
 # Achievements - Catchall
 $route['achievement/(:any)'] = 'achievement/$1';
 
-#$route['achievement/vote/(:any)/(:num)'] = 'achievement/vote/$1/$2';
-#$route['achievement/achieve/(:num)'] = 'achievement/achieve/$1';
-#$route['achievement/comment/(:num)'] = 'achievement/comment/$1';
-
-$route['test/(:any)'] = 'test/$1';
+# Migrations
+$route['migrate'] = 'migrate';
 
 ## DEFAULTS
 $route['(:any)'] = 'pages/view/$1';

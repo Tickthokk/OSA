@@ -52,10 +52,11 @@ if (defined('ENVIRONMENT'))
 			$active_group = 'default';
 		break;
 
+		case 'qa':
 		case 'production':
-			$active_group = 'production';
+			$active_group = ENVIRONMENT;
 		break;
-
+		
 		default:
 			exit('The application environment is not set correctly.');
 	}
@@ -78,11 +79,11 @@ $db['default']['swap_pre'] = '';
 $db['default']['autoinit'] = TRUE;
 $db['default']['stricton'] = FALSE;
 
-// Production is largely the same as default
-$db['production'] = $db['default'];
-// The following are the difference
-$db['production']['username'] = 'something_else';
-$db['production']['password'] = 'something_else';
+if ($active_group == 'qa')
+	include 'qa/database.php';
+
+if ($active_group == 'production')
+	include 'production/database.php';
 
 /* End of file database.php */
 /* Location: ./application/config/database.php */

@@ -1,5 +1,19 @@
 <h1>Dashboard</h1>
 
+<h2>Moderator Management</h2>
+<ul>
+	<li>
+		<a href = '/admin/unapproved/links'>View Unapproved Links</a>
+	</li>
+	<li>
+		<a href = '/admin/flagged/links'>View Flagged Links</a>
+	</li>
+	<li>
+		<a href = '/admin/flagged/games'>View Flagged Games</a>
+	</li>
+</ul>
+
+<h2>System Management</h2>
 <ul>
 	<li>
 		<a href = '/admin/fix/games'>Fix Games achievement tally</a>

@@ -167,7 +167,7 @@ var game = {
 
 		// Get the reason
 		var reason = $('#flag_for_bad_link textarea').val(),
-			linkId = $('#flag_for_bad_link select').val();
+			link_id = $('#flag_for_bad_link select').val();
 
 		if (reason == '')
 		{
@@ -176,7 +176,7 @@ var game = {
 		}
 
 		$.ajax({
-			url: '/flag/gamelink/' + linkId,
+			url: '/flag/gamelink/' + link_id,
 			data: {
 				reason: reason
 			},

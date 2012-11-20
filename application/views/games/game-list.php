@@ -21,7 +21,7 @@
 				</p>
 				<?php endif; ?>
 				<p>
-					<?php echo $g['achievementTally']; ?> Achievements
+					<?php echo $g['achievement_tally']; ?> Achievements
 				</p>
 			</div>
 		</div>

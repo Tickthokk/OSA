@@ -31,11 +31,11 @@ class Images_model extends CI_Model
 	# Reduce the image size to the desired $width and $height
 	# Save that in assets/images/cache/<width>/<height>/slugname.extension
 
-	public function get_path($slug, $wikiSlug)
+	public function get_path($slug, $wiki_slug)
 	{
 		$filename = $this->does_image_exist($slug);
 		if ( ! $filename)
-			$filename = $this->image_grab($slug, $wikiSlug);
+			$filename = $this->image_grab($slug, $wiki_slug);
 
 		return $this->base_file_path . 'originals/' . $filename;
 	}
@@ -57,12 +57,12 @@ class Images_model extends CI_Model
 		return $filename ?: FALSE;
 	}
 
-	public function image_grab($slug, $wikiSlug)
+	public function image_grab($slug, $wiki_slug)
 	{
-		if ( ! $wikiSlug)
+		if ( ! $wiki_slug)
 			return FALSE;
 
-		$wikiLink = $this->wiki_base . $wikiSlug;
+		$wikiLink = $this->wiki_base . $wiki_slug;
 
 		if ($this->firewall)
 		{

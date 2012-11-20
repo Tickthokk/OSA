@@ -28,7 +28,11 @@ class OSA_Controller extends CI_Controller
 				'about'
 			),
 			'page_search' => '',
-			'firewall_enabled' => $this->firewall
+			'firewall_enabled' => $this->firewall,
+			'css' => array(),
+			'js' => array(),
+			'is_moderator' => FALSE,
+			'is_admin' => FALSE
 		);
 
 		# Manually include the necessary files
@@ -55,6 +59,19 @@ class OSA_Controller extends CI_Controller
 			if ( ! isset($this->_data[$message]))
 				$this->_data[$message] = $this->session->flashdata($message);
 
+		# Is the user a Moderator?
+		if ($this->user->is_moderator())
+		{
+			$this->_data['css'][] = 'admin';
+			$this->_data['js'][] = 'admin';
+			$this->_data['is_moderator'] = TRUE;
+			
+			if ($this->user->is_admin())
+			{
+				$this->_data['is_admin'] = TRUE;
+			}
+		}
+
 		# Page Display
 		$this->parser->parse('wrapper/header', $this->_data);
 		$this->parser->parse($page_path, $this->_data);
@@ -70,7 +87,7 @@ class OSA_Controller extends CI_Controller
 		return $contents;
 	}
 
-	public function _ajax_only($user_only = false)
+	public function _ajax_only($user_only = FALSE)
 	{
 		# TODO put these in language file
 		if ( ! $this->input->is_ajax_request())

@@ -13,10 +13,10 @@
 </script>
 
 <div class = 'page-header'>
-	<?php if ($achievement['systemExclusive']) : ?>
+	<?php if ($achievement['system_exclusive']) : ?>
 	<div id = 'system-exclusive' class = 'label label-inverse'>
 		<div>
-			<?php echo strtoupper($achievement['systemExclusive']['slug']); ?>
+			<?php echo strtoupper($achievement['system_exclusive']['slug']); ?>
 			<div>Exclusive</div>
 		</div>
 	</div>
@@ -74,7 +74,7 @@
 	</div>
 	<div class = 'span8'>
 		<div class = 'well'>
-			<?php if ($achievement['userId'] == $this->user->id) : ?>
+			<?php if ($achievement['user_id'] == $this->user->id || $this->user->is_moderator()) : ?>
 			<div class = 'flr'>
 				<span class = 'btn btn-warning edit_achievement' data-toggle = 'modal' data-target = 'achievement_editing'>
 					<i class = 'icon-pencil icon-white'></i>
@@ -101,7 +101,7 @@
 			</div>
 			<p class = 'created-modified'>
 				Created By: 
-				<a href = '/user/profile/<?php echo $achievement['userId']; ?>#<?php echo $achievement['username']; ?>' title = 'View Profile'><?php echo $achievement['username']; ?></a>
+				<a href = '/user/profile/<?php echo $achievement['user_id']; ?>#<?php echo $achievement['username']; ?>' title = 'View Profile'><?php echo $achievement['username']; ?></a>
 				on <?php echo parse_sql_timestamp_full($achievement['added']); ?>
 				<?php if ($achievement['added'] != $achievement['modified'] && (int) $achievement['modified']) : ?>
 				<span>Modified: <?php echo parse_sql_timestamp_full($achievement['modified']); ?></span>
@@ -110,7 +110,7 @@
 		</div>
 
 		<div class = 'well' id = 'comments' data-top-comment-id = '<?php echo $top_comment_id; ?>' data-current-comment-count = '5'>
-			<h2>Comments</h2>
+			<h2>Comments (<?php echo $total_comments; ?>)</h2>
 			<?php if ( ! $total_comments) : ?>
 			<div class = 'well no-comments'>
 				<em>None!</em>  Be the first!

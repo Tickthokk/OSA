@@ -38,15 +38,15 @@
 			</label>
 			<div class = 'controls'>
 				<label class = 'checkbox'>
-					<input type = 'checkbox' name = 'systemExclusiveYes' value = '1' <?php echo set_checkbox('systemExclusiveYes', '1'); ?> /> Yes, this achievement applies to only one system
+					<input type = 'checkbox' name = 'system_exclusive_yes' value = '1' <?php echo set_checkbox('system_exclusive_yes', '1'); ?> /> Yes, this achievement applies to only one system
 				</label>
 			</div>
 		</div>
-		<div class = 'control-group hide' id = 'systemExclusive'>
+		<div class = 'control-group hide' id = 'system_exclusive'>
 			<?php foreach ($systems as $s) : ?>
 			<div class = 'controls'>
 				<label class = 'radio'>
-					<input type = 'radio' name = 'systemExclusive' id = 'systemExclusive' value = '<?php echo $s['id']; ?>' <?php echo set_radio('systemExclusive', $s['id']); ?> /> <?php echo strtoupper($s['slug']); ?>
+					<input type = 'radio' name = 'system_exclusive' id = 'system_exclusive' value = '<?php echo $s['id']; ?>' <?php echo set_radio('system_exclusive', $s['id']); ?> /> <?php echo strtoupper($s['slug']); ?>
 				</label>
 			</div>
 			<?php endforeach; ?>

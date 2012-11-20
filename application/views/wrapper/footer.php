@@ -22,10 +22,8 @@
 		<?php endif; ?>
 		<script src = '/assets/js/bootstrap.min.js' type = 'text/javascript'></script>
 		<script src = '/assets/js/_osa.js' type = 'text/javascript'></script>
-		<?php if (isset($js)) : ?>
 		<?php foreach ($js as $j) : ?>
 		<script src = '/assets/js/<?php echo $j; ?>.js' type = 'text/javascript'></script>
 		<?php endforeach; ?>
-		<?php endif; ?>
 	</body>
 </html>

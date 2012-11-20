@@ -27,20 +27,26 @@ class Game_model extends OSA_Concept
 		return $this->db
 			->select('s.id, s.name, s.slug, s.type, d.slug AS developer')
 			->from('system_games AS sg')
-			->join('systems AS s', 's.id = sg.systemId')
-			->join('developers AS d', 'd.id = s.developerId')
-			->where('sg.gameId', $this->id)
+			->join('systems AS s', 's.id = sg.system_id')
+			->join('developers AS d', 'd.id = s.developer_id')
+			->where('sg.game_id', $this->id)
 			->get()->result_array();
 	}
 
-	public function get_links()
+	public function get_links($ignore_solved = TRUE)
 	{
+		$section_id = $this->db
+			->select('id')
+			->from('flag_sections')
+			->where('name', 'game_link')
+			->get()->row('id');
+
 		return $this->db
 			->select('gl.id, gl.site, gl.url, gl.approved, COUNT(f.id) AS flagged', FALSE)
 			->from('game_links AS gl')
-			->join('flags AS f', 'f.sectionId = gl.id AND f.section = "gamelink"', 'left')
+			->join('flags AS f', 'f.table_id = gl.id AND f.section_id = ' . $section_id . ($ignore_solved ? ' AND f.solved IS NULL' : ''), 'LEFT')
 			->group_by('gl.id')
-			->where('gl.gameId', $this->id)
+			->where('gl.game_id', $this->id)
 			->get()->result_array();
 	}
 
@@ -49,8 +55,8 @@ class Game_model extends OSA_Concept
 		$this->db
 			->set('submitted', 'NOW()', FALSE)
 			->insert('game_links', array(
-				'gameId' => $this->id,
-				'submittedBy' => $user_id,
+				'game_id' => $this->id,
+				'submitted_by' => $user_id,
 				'site' => $site,
 				'url' => $url
 			));
@@ -70,14 +76,14 @@ class Game_model extends OSA_Concept
 	{
 		// Prep Query
 		return $this->db
-			->select('SQL_CALC_FOUND_ROWS a.id, a.name, a.description, a.icon, se.slug AS systemSlug, se.name AS systemName, au.achievedAt AS iDidIt, ' . 
-				'(SELECT COUNT(id) FROM achievement_comments WHERE achievementId = a.id) AS comments, ' . 
-				'(SELECT COUNT(id) FROM achievement_users WHERE achievementId = a.id) AS achievers', 
+			->select('SQL_CALC_FOUND_ROWS a.id, a.name, a.description, a.icon, se.slug AS systemSlug, se.name AS systemName, au.achieved AS iDidIt, ' . 
+				'(SELECT COUNT(id) FROM achievement_comments WHERE achievement_id = a.id) AS comments, ' . 
+				'(SELECT COUNT(id) FROM achievement_users WHERE achievement_id = a.id) AS achievers', 
 				FALSE)
 			->from('achievements AS a')
-			->join('systems AS se', 'se.id = a.systemExclusive', 'left')
-			->join('achievement_users AS au', 'au.achievementId = a.id AND au.userId = ' . (int) $user_id, 'left')
-			->where('a.gameId', $this->id)
+			->join('systems AS se', 'se.id = a.system_exclusive', 'left')
+			->join('achievement_users AS au', 'au.achievement_id = a.id AND au.user_id = ' . (int) $user_id, 'left')
+			->where('a.game_id', $this->id)
 			->order_by('a.added', 'DESC')
 			->get()->result_array();
 	}

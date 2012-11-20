@@ -1,6 +1,8 @@
 <?php
+
 class News_model extends CI_Model
 {
+	
 	public function __construct()
 	{
 		$this->load->database();
@@ -32,4 +34,5 @@ class News_model extends CI_Model
 
 		return $this->db->insert('news', $data);
 	}
+
 }

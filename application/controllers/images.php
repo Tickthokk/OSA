@@ -36,7 +36,7 @@ class Images extends OSA_Controller
 		}*/
 
 		# Get the file path
-		$path = $this->images->get_path($this->game->slug, $this->game->wikiSlug);
+		$path = $this->images->get_path($this->game->slug, $this->game->wiki_slug);
 		
 		# Prep configuration for image resizer
 		$config = array_merge($this->images->base_config, array(

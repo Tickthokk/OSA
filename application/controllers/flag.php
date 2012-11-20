@@ -14,22 +14,24 @@ class Flag extends OSA_Controller
 		// Method only available via Ajax calls
 		$this->_ajax_only();
 
-		$allowedWhat = array(
-			'game', 'gamelink', 'acheivement'
-		);
+		$section_id = $this->db
+			->select('id')
+			->from('flag_sections')
+			->where('name', $what)
+			->get()->row('id');
 
-		if ( ! in_array($what, $allowedWhat))
-			$this->_ajax_error('Section not recognized.');
-
+		if ( ! $section_id)
+			$this->_ajax_error('Section not recognized');
+		
 		if ($this->user->id)
 			$this->db->set('submitter', $this->user->id);
 
 		$this->db
-			->set('submitterIP', 'INET_ATON("' . $this->session->userdata('ip_address') . '")', FALSE)
+			->set('submitter_ip', 'INET_ATON("' . $this->session->userdata('ip_address') . '")', FALSE)
 			->set('created', 'NOW()', FALSE)
 			->insert('flags', array(
-				'section' => $what,
-				'sectionId' => (int) $id,
+				'section_id' => (int) $section_id,
+				'table_id' => (int) $id,
 				'reason' => $this->input->post('reason') ?: ''
 			));
 	}

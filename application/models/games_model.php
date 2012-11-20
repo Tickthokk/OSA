@@ -28,7 +28,7 @@ class Games_model extends CI_Model
 
 	/**
 	 *	Get the Systems of a/all Developers
-	 *	@param integer $developerId >> If null, get all developers
+	 *	@param integer $developer_id >> If null, get all developers
 	 *	@param boolean $split >> Split up the consoles and portables?
 	 *	@return Assoc array
 	 *  	@example 
@@ -51,11 +51,11 @@ class Games_model extends CI_Model
 	 *		),
 	 *		...
 	 */
-	public function get_developer_systems($developerId = null, $split = true)
+	public function get_developer_systems($developer_id = null, $split = true)
 	{
 		
-		if ( ! is_null($developerId) )
-    		$this->db->where('id', (int) $developerId);
+		if ( ! is_null($developer_id) )
+    		$this->db->where('id', (int) $developer_id);
     	
 		$query = $this->db->get('developers');
 		$developers = $query->result();
@@ -76,7 +76,7 @@ class Games_model extends CI_Model
 			);
 			foreach ($systems as $key => $s) 
 			{
-				if ($d->id != $s->developerId) 
+				if ($d->id != $s->developer_id) 
 					continue;
 				
 				if ($split === false) 
@@ -112,31 +112,31 @@ class Games_model extends CI_Model
 		# If system is defined, use that
 		if ($system && $system != 'all') 
 		{
-			$systemId = $this->unslug('systems', $system);
+			$system_id = $this->unslug('systems', $system);
 
 			# Main Join
-			$this->db->join('system_games', 'games.id = system_games.gameId AND systemId = ' . $systemId);
+			$this->db->join('system_games', 'games.id = system_games.game_id AND system_id = ' . $system_id);
 		}
 		# If not, and manufacturer is defined, find the systems of a developer, and use that.
 		elseif ($manufacturer && $manufacturer != 'all')
 		{
-			$developerId = $this->unslug('developers', $manufacturer);
+			$developer_id = $this->unslug('developers', $manufacturer);
 
-			$systems = $this->get_developer_systems($developerId, false);
+			$systems = $this->get_developer_systems($developer_id, false);
 
-			$systemIds = array();
+			$system_ids = array();
 			foreach ($systems[0]['systems'] as $s)
-				$systemIds[] = $s['id'];
+				$system_ids[] = $s['id'];
 			
 			# Main Join
 			$this->db
-				->where_in('systemId', $systemIds)
-				->join('system_games', 'games.id = system_games.gameId AND systemId IN (' . implode(',', $systemIds) . ')');
+				->where_in('system_id', $system_ids)
+				->join('system_games', 'games.id = system_games.game_id AND system_id IN (' . implode(',', $system_ids) . ')');
 		}
 
 		# If a letter is defined, include it in the search as well
 		if ($letter && $letter != 'all')
-			$this->db->where('firstLetter', $letter);
+			$this->db->where('first_letter', $letter);
 		
 		# If everything was "All", just grab 4 random games
 		if ($system == 'all' && $manufacturer == 'all' && $letter == 'all')
@@ -156,11 +156,11 @@ class Games_model extends CI_Model
 
 	/**
 	 * Unslug <Something>
-	 * 	We are given something like `slug-name`, which needs to be translated to their database Id
+	 * 	We are given something like `slug-name`, which needs to be translated to their database _id
 	 * <Something> is most likely "developers", "systems" or "games"
 	 * @param string $type >> The table, "developers", "systems", "games", "etc"
 	 * @param string $slug >> The text version of the <something>
-	 * @return integer $<something>Id
+	 * @return integer $<something>_id
 	 */
 	public function unslug($type, $slug)
 	{
@@ -194,8 +194,8 @@ class Games_model extends CI_Model
 		$this->db
 			->select('g.*, s.slug AS systemSlug, s.name AS systemName')
 			->from('games AS g')
-			->join('system_games AS sg', 'sg.gameId = g.id')
-			->join('systems AS s', 's.id = sg.systemId');
+			->join('system_games AS sg', 'sg.game_id = g.id')
+			->join('systems AS s', 's.id = sg.system_id');
 		
 		if ( ! empty($term))
 			$this->db->like('g.name', $term);
@@ -219,7 +219,7 @@ class Games_model extends CI_Model
 		$this->db->insert('games', array(
 			'name' => $name,
 			'slug' => $this->input->post('slug'),
-			'firstLetter' => strtolower($name[0])
+			'first_letter' => strtolower($name[0])
 		));
 
 		# Get the ID of the Game
@@ -228,8 +228,8 @@ class Games_model extends CI_Model
 		# Connect the game to the designated systems
 		foreach ($this->input->post('system') as $system_id)
 			$this->db->insert('system_games', array(
-				'systemId' => $system_id,
-				'gameId' => $game_id
+				'system_id' => $system_id,
+				'game_id' => $game_id
 			));
 		
 		return $game_id;

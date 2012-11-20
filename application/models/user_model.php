@@ -3,7 +3,8 @@
 class User_model extends OSA_Concept
 {
 	public 
-		$is_logged = FALSE;
+		$is_logged = FALSE,
+		$acl = NULL;
 
 	public 
 		$_table = 'users';
@@ -24,25 +25,72 @@ class User_model extends OSA_Concept
 	{
 		if ($id)
 		{
-			$this->id = $id;
-			$this->is_logged = TRUE;
+			if ( ! is_numeric($id))
+				$id = $this->find_id_from_username($id);
+
+			if ($id)
+			{
+				$this->id = $id;
+				$this->is_logged = TRUE;
+			}
 		}
 	}
 
+	public function find_id_from_username($username)
+	{
+		return $this->db
+			->select('id')
+			->from('users')
+			->where('username', $username)
+			->get()->row('id');
+	}
+
+	/**
+	 * Notes about ACL [Access Control Level]
+	 * 1 == Admin
+	 * 9 == Moderator
+	 */
+
+	/**
+	 * Is the user an Administrator?
+	 */
 	public function is_admin()
 	{
-		return (bool) $this->db
-			->select('COUNT(*) AS `count`', FALSE)
-			->from('admins')
-			->where('uid', $this->id)
-			->where('key', $this->CI->config->item('encryption_key'))
-			->get()->row('count');
+		$this->get_acl('admin');
+		return (bool) $this->acl == 1;
+	}
+
+	/**
+	 * Is the user a Moderator?
+	 * If they're an administrator: yes
+	 */
+	public function is_moderator()
+	{
+		$this->get_acl('mod');
+		return (bool) in_array($this->acl, array(1,9));
+	}
+
+	/**
+	 * Get ACL 
+	 * @param string $type >> 'admin' || 'mod'
+	 */
+	public function get_acl($type = 'admin')
+	{
+		if ( ! $this->acl) 
+			$this->acl = (bool) $this->db
+				->select('COUNT(*) AS `count`', FALSE)
+				->from('user_acl')
+				->where('uid', $this->id)
+				->where('key', md5($this->CI->config->item('encryption_key')))
+				->get()->row('count');
+
+		return $this->acl;
 	}
 
 	public function login($username, $password)
 	{
 		$result = $this->db
-			->select('id, achievementTally')
+			->select('id, achievement_tally')
 			->from('users')
 			->where('username', $username)
 			->where('password', $this->_hash($password))
@@ -61,7 +109,7 @@ class User_model extends OSA_Concept
 
 			$this->CI->session->set_userdata(array(
 				'user_id' => $this->id,
-				'tally' => $result->achievementTally
+				'tally' => $result->achievement_tally
 			));
 
 			$this->is_logged = TRUE;

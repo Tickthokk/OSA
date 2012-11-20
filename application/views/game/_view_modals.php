@@ -33,7 +33,7 @@
 		<h3>Flagging Game</h3>
 	</div>
 	<div class = 'modal-body'>
-		<p>You are flagging "<?php echo $this->game->name; ?>" as inappropriate.  A moderator will review, and if warranted, the game will be removed.</p>
+		<p>You are flagging "<?php echo $this->game->name; ?>" as inappropriate.  A moderator will review, and if warranted, the appropriate actions will be taken.</p>
 		<p><strong>Reason:</strong></p>
 		<textarea></textarea>
 		<p>Thanks for keeping OSA Tidy!</p>

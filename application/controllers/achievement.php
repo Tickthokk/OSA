@@ -18,16 +18,16 @@ class Achievement extends OSA_Controller
 		if ( ! $this->achievement->exists())
 			show_error('That achievement does not exist.');
 
-		$this->game = $this->games->load($this->achievement->gameId);
+		$this->game = $this->games->load($this->achievement->game_id);
 
 		if ( ! $this->game->exists())
 			show_error('That game does not exist.');
 
 		$game_data = $this->game->get_all();
-		$game_data['id'] = $this->achievement->gameId;
+		$game_data['id'] = $this->achievement->game_id;
 		
 		$achievement_data = $this->achievement->get_all();
-		$achievement_data['systemExclusive'] = $this->achievement->system_exclusive();
+		$achievement_data['system_exclusive'] = $this->achievement->system_exclusive();
 		$achievement_data['username'] = $this->achievement->username;
 		
 		list($comments, $total_comments) = $this->achievement->get_comments();
@@ -325,7 +325,7 @@ class Achievement extends OSA_Controller
 		$description = $this->input->post('description');
 
 		# Does the achievement belong to them?
-		if ($this->achievement->userId == $this->user->id) {
+		if ($this->achievement->user_id == $this->user->id || $this->user->is_moderator()) {
 
 			# Too many achievers prevents editing
 			if ($this->achievement->get_achiever_count() < $this->config->item('modify_if_achievers_under'))
@@ -360,7 +360,7 @@ class Achievement extends OSA_Controller
 		$this->achievement = $this->achievements->load($achievement_id);
 
 		# Does the achievement belong to them?
-		if ($this->achievement->userId == $this->user->id) {
+		if ($this->achievement->user_id == $this->user->id || $this->user->is_moderator()) {
 
 			# Too many achievers prevents deleting
 			if ($this->achievement->get_achiever_count() < $this->config->item('modify_if_achievers_under'))
