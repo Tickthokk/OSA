@@ -3,7 +3,3 @@ Placed at ../CodeIgniter/system locally
 
 Uses SASS
 @see assets/start_sass.bat
-
-Missing Folders, for secrecy:
-application/config/production/
-application/config/qa/
