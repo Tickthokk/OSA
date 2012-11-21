@@ -190,13 +190,16 @@ class Achievements_model extends CI_Model
 
 	/**
 	 * Leaderboard (top 10 achievers)
+	 * Sorting DESC by last_login - In events of a tie, the user who had the most recent activity last will place higher
 	 */
 	public function leaderboard($wanted = 10)
 	{
 		return $this->db
 			->select('u.id, u.username, u.achievement_tally')
 			->from('users AS u')
-			->order_by('achievement_tally', 'DESC')
+			->join('user_acl AS ua', 'ua.uid = u.id', 'LEFT')
+			->where('ua.level IS NULL') // Prevent Administrators from displaying on Leaderboard
+			->order_by('achievement_tally DESC, last_login', 'DESC')
 			->limit($wanted)
 			->get()->result_array();
 	}

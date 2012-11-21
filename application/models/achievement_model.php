@@ -18,7 +18,7 @@ class Achievement_model extends OSA_Concept
 		return $this->db
 			->select('username')
 			->from('users')
-			->where('id', $this->user_id)
+			->where('id', $this->added_by)
 			->get()->row('username');
 	}
 
@@ -214,6 +214,11 @@ class Achievement_model extends OSA_Concept
 			'achievement_id' => $this->id,
 			'user_id' => $user_id
 		));
+
+		$this->db
+			->set('achievement_tally', 'achivement_tally + 1', FALSE)
+			->where('id', $user_id)
+			->update('users');
 
 		return TRUE;
 	}

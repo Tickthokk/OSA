@@ -74,7 +74,7 @@
 	</div>
 	<div class = 'span8'>
 		<div class = 'well'>
-			<?php if ($achievement['user_id'] == $this->user->id || $this->user->is_moderator()) : ?>
+			<?php if ($achievement['added_by'] == $this->user->id || $this->user->is_moderator()) : ?>
 			<div class = 'flr'>
 				<span class = 'btn btn-warning edit_achievement' data-toggle = 'modal' data-target = 'achievement_editing'>
 					<i class = 'icon-pencil icon-white'></i>
@@ -101,7 +101,7 @@
 			</div>
 			<p class = 'created-modified'>
 				Created By: 
-				<a href = '/user/profile/<?php echo $achievement['user_id']; ?>#<?php echo $achievement['username']; ?>' title = 'View Profile'><?php echo $achievement['username']; ?></a>
+				<a href = '/user/profile/<?php echo $achievement['added_by']; ?>#<?php echo $achievement['username']; ?>' title = 'View Profile'><?php echo $achievement['username']; ?></a>
 				on <?php echo parse_sql_timestamp_full($achievement['added']); ?>
 				<?php if ($achievement['added'] != $achievement['modified'] && (int) $achievement['modified']) : ?>
 				<span>Modified: <?php echo parse_sql_timestamp_full($achievement['modified']); ?></span>
