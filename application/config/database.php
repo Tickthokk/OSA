@@ -84,9 +84,10 @@ if ($active_group == 'qa')
 	// QA is largely the same as default
 	$db['qa'] = $db['default'];
 	// The following are the difference
-	$db['qa']['hostname'] = DB_HOST;
-	$db['qa']['username'] = DB_USER;
-	$db['qa']['password'] = DB_PASSWORD;
+	//						// Set by PagodaBox
+	$db['qa']['hostname'] = $_SERVER['DB1_HOST'];
+	$db['qa']['username'] = $_SERVER['DB1_USER'];
+	$db['qa']['password'] = $_SERVER['DB1_PASS'];
 }
 
 if ($active_group == 'production')
