@@ -91,7 +91,9 @@ if ($active_group == 'qa')
 }
 
 if ($active_group == 'production')
-	include 'production/database.php';
+{
+	
+}
 
 /* End of file database.php */
 /* Location: ./application/config/database.php */
