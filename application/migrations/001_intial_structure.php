@@ -254,7 +254,7 @@ class Migration_Intial_structure extends CI_Migration
 			) COMMENT='Defines Manufacturers and Developers';
 		");
 		
-		echo 'DONE!</p>';
+		echo '<p>DONE!</p>';
 	}
 
 	public function down()
