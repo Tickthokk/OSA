@@ -252,7 +252,7 @@ var achievement = {
 		var btngroup = el.parent('.btn-group');
 
 		var id = btngroup.data('id');
-		var name = btngroup.data('el').parent('span').data('name');
+		var name = btngroup.data('el').data('name');
 
 		// Activate Flag
 		achievement.vote_button_style('add', btngroup, 'flag');
