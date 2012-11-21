@@ -75,6 +75,9 @@ class Game_links_model extends OSA_Concept
 			->where('name', 'game_link')
 			->get()->row('id');
 
+		if ( ! is_numeric($section_id))
+			return FALSE;
+
 		$this->db
 			->set('solved', 'NOW()', FALSE)
 			->set('solved_by', $approver_id)

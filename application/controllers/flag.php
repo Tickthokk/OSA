@@ -20,7 +20,7 @@ class Flag extends OSA_Controller
 			->where('name', $what)
 			->get()->row('id');
 
-		if ( ! $section_id)
+		if ( ! is_numeric($section_id))
 			$this->_ajax_error('Section not recognized');
 		
 		if ($this->user->id)

@@ -41,6 +41,9 @@ class Game_model extends OSA_Concept
 			->where('name', 'game_link')
 			->get()->row('id');
 
+		if ( ! is_numeric($section_id))
+			return array();
+
 		return $this->db
 			->select('gl.id, gl.site, gl.url, gl.approved, COUNT(f.id) AS flagged', FALSE)
 			->from('game_links AS gl')

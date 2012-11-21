@@ -137,12 +137,6 @@ class Migration_Startup_data extends CI_Migration
 		$this->db->query("INSERT IGNORE INTO `tags` VALUES (13,'fail',1,1)");
 		$this->db->query("INSERT IGNORE INTO `tags` VALUES (14,'survial',1,1)");
 		$this->db->query("INSERT IGNORE INTO `tags` VALUES (15,'minimalist',1,1)");
-
-		$this->db->query("INSERT IGNORE INTO `flag_sections` VALUES (1,'game')");
-		$this->db->query("INSERT IGNORE INTO `flag_sections` VALUES (2,'game_link')");
-		$this->db->query("INSERT IGNORE INTO `flag_sections` VALUES (3,'achievement')");
-		$this->db->query("INSERT IGNORE INTO `flag_sections` VALUES (4,'achievement_comment')");
-		$this->db->query("INSERT IGNORE INTO `flag_sections` VALUES (5,'achievement_comment_lock')");
 		
 		echo '<p>DONE!</p>';
 	}
