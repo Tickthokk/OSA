@@ -7,29 +7,40 @@ class Admin extends OSA_Controller
 	{
 		parent::__construct();
 
-		# Creation only available to logged users
+		# Only available to admin users
 		if ( ! $this->user->is_admin())
 			show_404();
+
+		$this->_data['css'][] = 'admin/admin';
+
+		$this->theme = 'admin';
 	}
 
 	public function dashboard()
 	{
-		$this->_data['user_tally'] = $this->db
-			->select('COUNT(id) AS `count`')
-			->from('users')
-			->get()->row('count');
-		$this->_data['games_tally'] = $this->db
-			->select('COUNT(id) AS `count`')
-			->from('games')
-			->get()->row('count');
-		$this->_data['achievements_tally'] = $this->db
-			->select('COUNT(id) AS `count`')
-			->from('achievements')
-			->get()->row('count');
+		$this->load->model('Admin_model', 'admin');
+
+		$tallys = $this->admin->dashboard_tallys();
+
+		// Cleanup tallys
+		foreach ($tallys as &$value)
+			$value = number_format($value, 0, '.', ',');
+
+		$this->set_more_data($tallys);
+
+		$this->_data['css'][] = 'admin/admin';
+
+		$this->_data['js'][] = 'admin/dashboard';
+
+		$this->_data['left_nav'] = 'dash';
 
 		# Page Load
 		$this->_load_wrapper('admin/dashboard');
 	}
+
+	/////////////
+	// Unapproved
+	/////////////
 
 	public function unapproved($what)
 	{
@@ -40,6 +51,10 @@ class Admin extends OSA_Controller
 	{
 		
 	}
+
+	//////////
+	// Flagged
+	//////////
 
 	public function flagged($what)
 	{
@@ -56,8 +71,9 @@ class Admin extends OSA_Controller
 
 	}
 
-
-
+	//////
+	// Fix
+	//////
 
 	public function fix($what)
 	{
@@ -420,6 +436,35 @@ class Admin extends OSA_Controller
 		$a = $this->achievements->load($id);
 		$a->allow_deletion();
 		$a->delete();
+	}
+
+	public function user_list()
+	{
+		$this->_ajax_only();
+
+		$this->load->model('Admin_model', 'admin');
+
+		$users = $this->admin->user_list($this->input->get());
+
+		// Special things for specific columns
+		foreach ($users['aaData'] as &$row)
+		{
+			// Fields to remove and set to _data
+			foreach (array('activated', 'banned', 'ban_reason', 'level', 'achievement_tally') as $var)
+			{
+				$this->_data[$var] = $row[$var];
+				unset($row[$var]);
+			}
+			$this->_data['user_id'] = $row['id'];
+			
+			$row['actions'] = $this->_preview('admin/manage/_user_actions');
+
+			// Remove keys from each row, that's how DataTables needs it
+			$row = array_values($row);
+		}
+			
+
+		$this->_ajax_return($users);
 	}
 
 }

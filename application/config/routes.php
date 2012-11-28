@@ -39,8 +39,9 @@
 */
 
 ## Admin Section
-$route['admin'] = 'admin/admin/dashboard';
+$route['admin/manage/(:any)'] = 'admin/manage/$1';
 $route['admin/(:any)'] = 'admin/admin/$1';
+$route['admin'] = 'admin/admin/dashboard';
 
 ## USERS
 $route['user/login'] = 'user/login';

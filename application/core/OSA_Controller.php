@@ -14,6 +14,7 @@ class OSA_Controller extends CI_Controller
 
 		$this->environment = @$_SERVER['APPLICATION_ENV'] ?: 'production';
 		$this->firewall = @$_SERVER['BEHIND_FIREWALL'] ?: FALSE;
+		$this->theme = '';
 
 		# Page Definitions
 		$this->_data = array(
@@ -32,7 +33,9 @@ class OSA_Controller extends CI_Controller
 			'css' => array(),
 			'js' => array(),
 			'is_moderator' => FALSE,
-			'is_admin' => FALSE
+			'is_admin' => FALSE,
+			'gravatar_url' => '',
+			'left_nav' => '', // Admin Only
 		);
 
 		# Manually include the necessary files
@@ -44,7 +47,10 @@ class OSA_Controller extends CI_Controller
 
 	public function set_more_data($array)
 	{
-		$this->_data = array_merge($this->_data, $array);
+		if (empty($array)) return;
+
+		foreach ($array as $key => $value)
+			$this->_data[$key] = $value;
 	}
 
 	public function set_title($title)
@@ -72,10 +78,18 @@ class OSA_Controller extends CI_Controller
 			}
 		}
 
+		//$placeholder_image = 'http://placehold.it/40x40.jpg';
+		$placeholder_image = 'http://lorempixel.com/output/abstract-q-c-40-40-' . rand(1,6) . '.jpg';
+
+		# Figure out a gravatar url:
+		$this->_data['gravatar_url'] = $this->user->is_logged 
+			? 'http://www.gravatar.com/avatar/' . md5(strtolower(trim($this->user->email ?: ''))) . "?d=" . urlencode($placeholder_image) . '&s=40' 
+			: $placeholder_image;
+
 		# Page Display
-		$this->parser->parse('wrapper/header', $this->_data);
+		$this->parser->parse('wrapper/' . ($this->theme ? ($this->theme . '/'): '') . 'header', $this->_data);
 		$this->parser->parse($page_path, $this->_data);
-		$this->parser->parse('wrapper/footer', $this->_data);
+		$this->parser->parse('wrapper/' . ($this->theme ? ($this->theme . '/'): '') . 'footer', $this->_data);
 	}
 
 	public function _preview($page_path)

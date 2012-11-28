@@ -6,9 +6,6 @@ var admin = {
 			// Fire the enable or disable event
 			admin[(admin.enabled ? 'dis' : 'en') + 'able']();
 		});
-
-		// For the sake of testing // TODO REMOVEME
-		$('.admin_mode').trigger('click');
 	},
 	enabled:false,
 	drawn:false,

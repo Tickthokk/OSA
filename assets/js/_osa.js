@@ -15,7 +15,8 @@ var osa = {
 		osa.tooltips();
 	},
 	tooltips:function() {
-		$('[rel=tooltip]').tooltip();
+		if ($('[rel=tooltip]').length > 0)
+			$('[rel=tooltip]').tooltip();
 	},
 	// Turn "A Text String - Like This" into "a-text-string-like-this"
 	slug:function(text) {
