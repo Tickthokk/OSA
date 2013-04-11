@@ -70,3 +70,20 @@
 		<span class = 'btn btn-danger yes-delete'>Yes, Delete</span>
 	</div>
 </div>
+
+<div id = 'flag_as_inappropriate' class = 'modal hide fade'>
+	<div class = 'modal-header'>
+		<button type = 'button' class = 'close' data-dismiss = 'modal'>&times;</button>
+		<h3>Flagging Achievement</h3>
+	</div>
+	<div class = 'modal-body'>
+		<p>You are flagging "<?php echo $this->achievement->name; ?>" as inappropriate.  A moderator will review, and if warranted, the appropriate actions will be taken.</p>
+		<p><strong>Reason:</strong></p>
+		<textarea></textarea>
+		<p>Thanks for keeping OSA Tidy!</p>
+	</div>
+	<div class = 'modal-footer'>
+		<span class = 'btn' data-dismiss = 'modal'>Cancel</span>
+		<span class = 'btn btn-danger flag-go'>Flag Achievement</span>
+	</div>
+</div>

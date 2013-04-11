@@ -21,6 +21,10 @@ var achievement = {
 
 		// Edit "Save" function
 		$('#achievement_deletion .yes-delete').click(achievement.delete_confirm);
+
+		// Flag as Inappropriate
+		$('.flag-as-inappropriate').click(achievement.flag);
+		$('.flag-go').click(achievement.flag_submit);
 	},
 	init_tags:function() {
 		$.fn.tagcloud.defaults = {
@@ -508,7 +512,43 @@ var achievement = {
 
 		// show reply buttons
 		$('.reply').show();
-	}
+	},
+	flag:function() {
+		$('#flag_as_inappropriate').modal();
+	},
+	flag_submit:function() {
+		// Hide the block
+		$('#flag_as_inappropriate').modal('hide');
+
+		// Get the reason
+		var reason = $('#flag_as_inappropriate textarea').val();
+
+		if (reason == '')
+		{
+			osa.error('A reason is required to flag.');
+			return false;
+		}
+
+		$.ajax({
+			url: '/flag/achievement/' + achievement_id,
+			data: {
+				reason: reason
+			},
+			success:function() {
+				osa.alert('Thank you for flagging.', 'A moderator will review your concerns.');
+
+				// Make the cancel button say something else
+				$('.flag-go').prev('.btn').html('Okay');
+
+				// Remove the flag-go button so they can't re-submit
+				$('.flag-go').remove();
+
+				// Replace the textarea
+				$('#flag_as_inappropriate textarea').after('<p>' + reason + '</p>');
+				$('#flag_as_inappropriate textarea').remove();
+			}
+		});
+	},
 }
 
 $(achievement.init);

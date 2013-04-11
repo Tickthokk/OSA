@@ -53,7 +53,6 @@ class Games_model extends CI_Model
 	 */
 	public function get_developer_systems($developer_id = null, $split = true)
 	{
-		
 		if ( ! is_null($developer_id) )
     		$this->db->where('id', (int) $developer_id);
     	
@@ -79,7 +78,7 @@ class Games_model extends CI_Model
 				if ($d->id != $s->developer_id) 
 					continue;
 				
-				if ($split === false) 
+				if ($split === FALSE) 
 					$type = 'systems';
 				elseif ($s->type == '')
 					$type = 'other';
@@ -100,14 +99,24 @@ class Games_model extends CI_Model
 		return $return;
 	}
 
+	public function get_all_systems()
+	{
+		return $this->db
+			->select('s.id, s.name, s.slug, s.type, d.slug AS developer')
+			->from('systems AS s')
+			->join('developers AS d', 'd.id = s.developer_id')
+			->order_by('s.developer_id, s.type, s.name')
+			->get()->result_array();
+	}
+
 	/**
 	 *	Get Games
 	 *	@param string $manufacturer >> the Slug of the Developer
 	 *	@param string $system >> the Slug of the system
-	 *	@param letter $letter >> Just one character
+	 *	@param letter $letter >> Just one character >> NULL = #/Special
 	 * 	@return assoc array of games
 	 */
-	public function get_games($manufacturer = null, $system = null, $letter = null)
+	public function get_games($manufacturer = NULL, $system = NULL, $letter = '')
 	{
 		# If system is defined, use that
 		if ($system && $system != 'all') 
@@ -122,7 +131,7 @@ class Games_model extends CI_Model
 		{
 			$developer_id = $this->unslug('developers', $manufacturer);
 
-			$systems = $this->get_developer_systems($developer_id, false);
+			$systems = $this->get_developer_systems($developer_id, FALSE);
 
 			$system_ids = array();
 			foreach ($systems[0]['systems'] as $s)
@@ -135,7 +144,9 @@ class Games_model extends CI_Model
 		}
 
 		# If a letter is defined, include it in the search as well
-		if ($letter && $letter != 'all')
+		if (is_null($letter))
+			$this->db->where('first_letter', NULL);
+		elseif ( ! empty($letter) && $letter != 'all')
 			$this->db->where('first_letter', $letter);
 		
 		# If everything was "All", just grab 4 random games
@@ -145,8 +156,6 @@ class Games_model extends CI_Model
 				->order_by('RAND()')
 				->limit(4);
 		}
-
-		//$this->db->select();
 		
 		return $this->db
 			->from('games')
@@ -179,7 +188,7 @@ class Games_model extends CI_Model
 	{
 		$result = $this->db->select('name')->from('games')->where('slug', $slug)->get()->result();
 		if (empty($result)) 
-			return false;
+			return FALSE;
 		return $result[0]->name;
 	}
 
@@ -209,6 +218,7 @@ class Games_model extends CI_Model
 	 * Create Game
 	 * @uses $this->input->post
 	 * @return generated $game_id
+	 * TODO @depreciated
 	 */
 	public function create()
 	{

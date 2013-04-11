@@ -1,0 +1,1 @@
+<a href = '/admin/flags/view/<?php echo $flag_id; ?>?nav=af'>View</a>

@@ -128,10 +128,10 @@ class User extends OSA_Controller
 			$this->user->logout();
 			$this->session->set_flashdata('success', 'You have successfully logged out.');
 		}
-		else
+		/*else
 		{
 			$this->session->set_flashdata('error', 'Wut?');
-		}
+		}*/
 		redirect('/user/login');
 	}
 

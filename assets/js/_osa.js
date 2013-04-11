@@ -118,7 +118,87 @@ var osa = {
 	// Scroll To
 	scroll_to:function(el) {
 		$('html, body').animate({scrollTop: el.offset().top}, 2000);
+	},
+	// IMG to SVG Replacer
+	svg:function() {
+		// Special thanks to: http://stackoverflow.com/a/11978996/286467
+		$('img.svg').each(function() {
+			var img = $(this);
+			
+			$.ajax({
+				url: img.attr('src'),
+				type: 'GET',
+				dataType: "xml",
+				success:function(data) {
+
+					// Parse the SVG portion out of the request
+					var svg = $(data).find('svg');
+					
+					// Add the ID in
+					if (typeof(img.attr('id')) !== 'undefined')
+						svg = svg.attr('id', img.attr('id'));
+
+					// Add the class in
+					if (typeof(img.attr('class')) !== 'undefined')
+						svg = svg.attr('class', img.attr('class') + ' replaced-svg');
+
+					// Remove any invalid XML tags as per http://validator.w3.org
+					svg = svg.removeAttr('xmlns:a');
+
+					// Now fill in the colors
+
+					// Main SVG element's fill is the BG
+					svg.attr('fill', img.data('bg'));
+
+					// Loop through each level.  If it has a current fill or stroke defined
+					// Replace those if they match #fff ($color) or #000 ($bg)
+					var i = 0;
+					svg.find('*').each(function() {
+						var el = $(this);
+						var fill = el.attr('fill'),
+							stroke = el.attr('stroke');
+
+						if (typeof(fill) !== 'undefined')
+						{
+							if (fill == '#fff')
+								el.css('fill', img.data('color'));
+							else if (fill == '#000')
+								el.css('fill', img.data('bg'));
+						}
+
+						if (typeof(stroke) !== 'undefined')
+						{
+							if (stroke == '#fff')
+								el.css('stroke', img.data('color'));
+							else if (stroke == '#000')
+								el.css('stroke', img.data('bg'));
+						}
+					});
+
+					// Replace image with new SVG
+					img.replaceWith(svg);
+				}
+			});
+		});
 	}
 }
 
 $(osa.init);
+
+// Extend Jquery with some functions
+$.extend({
+    array_unique: function(anArray) {
+       var result = [];
+       $.each(anArray, function(i,v){
+           if ($.inArray(v, result) == -1) result.push(v);
+       });
+       return result;
+    },
+    array_diff: function(array1, array2) {
+    	var difference = [];
+    	$.grep(array2, function(el) {
+			if ($.inArray(el, array1) == -1) difference.push(el);
+		});
+		return difference;
+    }
+});

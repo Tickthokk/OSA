@@ -39,9 +39,8 @@
 */
 
 ## Admin Section
-$route['admin/manage/(:any)'] = 'admin/manage/$1';
-$route['admin/(:any)'] = 'admin/admin/$1';
-$route['admin'] = 'admin/admin/dashboard';
+$route['admin/(:any)'] = 'admin/$1';
+$route['admin'] = 'admin/dashboard';
 
 ## USERS
 $route['user/login'] = 'user/login';
@@ -59,26 +58,20 @@ $route['game/(:num)'] = 'game/index/$1';
 $route['game/(:any)'] = 'game/$1';
 
 $route['search'] = 'search/main';
+
 $route['images/(:any)'] = 'images/view/$1';
+
 $route['games/(:any)'] = 'games/view/$1';
 $route['games'] = 'games/view';
 
-$route['create/(:any)'] = 'create/$1';
+
 
 $route['flag/(:any)'] = 'flag/run/$1';
 
 # Achievements - Specific
 $route['achievement/(:num)'] = 'achievement/view/$1';
 
-# Achievements - Catchall
-$route['achievement/(:any)'] = 'achievement/$1';
-
-# Migrations
-$route['migrate'] = 'migrate';
-
 ## DEFAULTS
-$route['(:any)'] = 'pages/view/$1';
-
 $route['default_controller'] = "pages/view";
 
 /* End of file routes.php */

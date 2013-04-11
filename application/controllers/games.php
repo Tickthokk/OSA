@@ -11,6 +11,9 @@ class Games extends OSA_Controller
 		# Data
 		$developer_systems = $this->games->get_developer_systems();
 
+		if ($letter == 'Special')
+			$letter = NULL;
+
 		$games = $this->games->get_games($manufacturer, $system, $letter);
 
 		# Header

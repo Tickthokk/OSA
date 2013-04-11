@@ -52,7 +52,8 @@ if (defined('ENVIRONMENT'))
 	{
 		case 'development':
 			error_reporting(E_ALL);
-			$system_path = '../CodeIgniter/system';
+			#$system_path = '../CodeIgniter/system';
+			$system_path = 'system';
 		break;
 	
 		case 'qa':

@@ -176,7 +176,7 @@ var game = {
 		}
 
 		$.ajax({
-			url: '/flag/gamelink/' + link_id,
+			url: '/flag/game_link/' + link_id,
 			data: {
 				reason: reason
 			},

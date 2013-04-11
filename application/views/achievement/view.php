@@ -71,6 +71,19 @@
 
 			<p><span class = 'btn btn-info btn-small'>See all achievers!</span></p>
 		</div>
+
+		<div class = 'well' style = 'margin-top: 10px;'>
+			<div class = 'btn-group'>
+				<a class = 'btn dropdown-toggle' data-toggle='dropdown' href='#'>
+					<i class = 'icon-cog'></i>
+					Help keep OSA Tidy!
+					<span class = 'caret'></span>
+				</a>
+				<ul class = 'dropdown-menu'>
+					<li><a href='#' class = 'flag-as-inappropriate'><i class = 'icon-warning-sign'></i> Flag as Inappropriate</a></li>
+				</ul>
+			</div>
+		</div>
 	</div>
 	<div class = 'span8'>
 		<div class = 'well'>

@@ -10,6 +10,7 @@
 		<link href = 'http://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/flick/jquery-ui.css' rel = 'stylesheet' type='text/css'>
 		<?php endif; ?>
 		<link href = '/assets/css/thirdparty/jquery-ui-1.8.16.custom.css' rel = 'stylesheet' type='text/css'>
+		<link href = 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/themes/ui-lightness/jquery-ui.css' rel='stylesheet' type='text/css' />
 		<!-- <link href = '/assets/css/twitterbootstrap/bootstrap.min.css' rel = 'stylesheet' type='text/css'> -->
 		<link href = '/assets/css/thirdparty/inspiritas.css' rel = 'stylesheet' type='text/css'>
 		<link href = '/assets/css/thirdparty/jquery.dataTables.css' rel = 'stylesheet' type='text/css'>
@@ -17,6 +18,7 @@
 		<link href = '/assets/css/thirdparty/datatables_bootstrap.css' rel = 'stylesheet' type='text/css'>
 		<link href = '/assets/css/layout.css' rel = 'stylesheet' type = 'text/css'>
 		<link href = '/assets/css/common.css' rel = 'stylesheet' type = 'text/css'>
+		<link href = '/assets/css/admin/common.css' rel = 'stylesheet' type='text/css'>
 		<?php foreach ($css as $c) : ?>
 		<link href = '/assets/css/<?php echo $c; ?>.css' rel = 'stylesheet' type = 'text/css'>
 		<?php endforeach; ?>
@@ -71,30 +73,70 @@
 								<?php 
 									$nav_items = array(
 										'dash' => array(
-											'link' => '/admin',
+											'link' => '/admin/dashboard',
 											'icon' => 'play',
 											'text' => 'Dashboard'
 										),
-										'um' => array(
-											'link' => '/admin/manage/users',
+										'us' => array(
+											'link' => '/admin/users',
 											'icon' => 'user',
-											'text' => 'User Management'
+											'text' => 'Users'
 										),
-										'ul' => array(
-											'link' => '/admin/unapproved/link',
-											'icon' => 'share',
-											'text' => 'Unapproved Links'
+										'ga' => array(
+											'link' => '/admin/games',
+											'icon' => 'film',
+											'text' => 'Games'
+										),
+										'gf' => array(
+											'link' => '/admin/game_flags',
+											'icon' => 'flag',
+											'text' => 'Game Flags'
+										),
+										'li' => array(
+											'link' => '/admin/links',
+											'icon' => 'bell',
+											'text' => 'Links'
+										),
+										'lf' => array(
+											'link' => '/admin/link_flags',
+											'icon' => 'flag',
+											'text' => 'Link Flags'
+										),
+										'ac' => array(
+											'link' => '/admin/achievements',
+											'icon' => 'certificate',
+											'text' => 'Achievements'
+										),
+										'af' => array(
+											'link' => '/admin/achievement_flags',
+											'icon' => 'flag',
+											'text' => 'Achievement Flags'
+										),
+										'ic' => array(
+											'link' => '/admin/icons',
+											'icon' => 'heart',
+											'text' => 'Icons'
+										),
+										'ta' => array(
+											'link' => '/admin/tags',
+											'icon' => 'tags',
+											'text' => 'Tags'
 										),
 										'fl' => array(
-											'link' => '/admin/flagged/links',
+											'link' => '/admin/flags/all',
 											'icon' => 'flag',
-											'text' => 'Flagged Links'
+											'text' => 'All Flags'
 										),
-										'fg' => array(
-											'link' => '/admin/flagged/games',
-											'icon' => 'flag',
-											'text' => 'Flagged Games'
+										'lo' => array(
+											'link' => '/admin/log',
+											'icon' => 'book',
+											'text' => 'Log'
 										),
+										'ad' => array(
+											'link' => '/admin/advanced',
+											'icon' => 'lock',
+											'text' => 'Advanced'
+										)
 									);
 									foreach ($nav_items as $nav_key => $nav) :
 								?>
@@ -106,43 +148,8 @@
 								</li>
 								<?php endforeach; ?>
 							</ul>
-							<h5 style = 'color: white; margin: -10px 0 10px 10px;'>Fix Achievement Tally's For</h5>
-							<ul class = 'nav'>
-								<li>
-									<a href = '/admin/fix/games'>
-										<i class = 'icon-map-marker icon-white'></i>
-										Games
-									</a>
-								</li>
-								<li>
-									<a href = '/admin/fix/users'>
-										<i class = 'icon-user icon-white'></i>
-										Users
-									</a>
-								</li>
-							</ul>
 						</nav>
 					</aside>
-					<?php /*
-								<!--
-								<li>
-									<strong>Warning: Use sparingly</strong>
-								</li>
-								<li>
-									<a href = '/admin/dummy/users/100'>Create 100 dummy users</a>
-									<strong>Currently:</strong> {user_tally}
-								</li>
-								<li>
-									<a href = '/admin/dummy/games/20'>Create 20 dummy games</a>
-									<strong>Currently:</strong> {games_tally}
-								</li>
-								<li>
-									<a href = '/admin/dummy/achievements/15'>Create 15 dummy achievements (per game)</a>
-									<strong>Currently:</strong> {achievements_tally}
-								</li>
-								-->
-							*/
-					?>
 				</div>
 				<div class = 'span9' id = 'content-wrapper'>
 					<div id = 'content'>

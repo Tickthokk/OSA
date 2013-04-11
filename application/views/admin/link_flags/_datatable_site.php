@@ -1,0 +1,1 @@
+<i class = 'icon-globe' rel = 'tooltip' title = '<?php echo $url; ?>'></i> <?php echo $site; ?>

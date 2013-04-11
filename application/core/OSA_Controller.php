@@ -43,6 +43,20 @@ class OSA_Controller extends CI_Controller
 		$this->load->model('Log_model', 'log');
 		
 		$this->user = $this->concept->load('user', $this->session->userdata('user_id'));
+
+		if ($this->user->is_logged)
+		{
+			if ($this->user->banned)
+			{
+				$this->session->set_flashdata('error', 'Your account has been banned.  Reason: ' . $this->user->ban_reason);
+				$this->user->logout();
+				redirect('/user/login');
+			}
+			/*elseif ( ! $this->user->activated)
+			{
+				// Your account has not been activated
+			}*/
+		}
 	}
 
 	public function set_more_data($array)

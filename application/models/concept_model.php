@@ -17,10 +17,10 @@ class Concept_model extends CI_Model
 	public function load($model = '', $id = null)
 	{
 		# Manually include necessary files
-		include_once(APPPATH . 'models/' . $model . '_model.php');
+		include_once(APPPATH . 'models/concepts/' . $model . '_concept.php');
 
 		$uniqid = uniqid();
-		$model_name = ucfirst($model) . '_model';
+		$model_name = ucfirst($model) . '_concept';
 
 		$this->concepts[$model][$uniqid] = new $model_name($this->db, get_instance());
 

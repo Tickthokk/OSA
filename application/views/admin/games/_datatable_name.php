@@ -1,0 +1,1 @@
+<a href = '/game/<?php echo $game_id; ?>#<?php echo $slug; ?>' rel = 'tooltip' title = 'Visit the Game&#39;s page'><?php echo $game_name; ?></a>

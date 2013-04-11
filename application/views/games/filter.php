@@ -14,14 +14,22 @@
 				games</u>
 			<?php if ($manufacturer != 'all') : ?>
 			<sup>
-				<a href = '/games<?php echo $letter != 'all' ? '/all/all/' . $letter : ''; ?>'><i class = 'icon-remove'></i></a>
+				<a href = '/games<?php echo $letter != 'all' ? '/all/all/' . (is_null($letter) ? 'Special' : $letter) : ''; ?>'><i class = 'icon-remove'></i></a>
 			</sup>
 			<?php endif; ?>
 		</span>
 		<?php else : ?>
 		games
 		<?php endif; ?>
-		<?php if ($letter && $letter != 'all') : ?>
+		<?php if (is_null($letter)) : ?>
+		beginning with a 
+		<span>
+			<u>special character</u>
+			<sup>
+				<a href = '/games/<?php echo $manufacturer ?: 'all'; ?>/<?php echo $system ?: 'all'; ?>'><i class = 'icon-remove'></i></a>
+			</sup>
+		</span>
+		<?php elseif ( ! empty($letter) && $letter != 'all') : ?>
 		beginning with the
 		<span>
 			<u>letter <?php echo strtoupper($letter); ?></u>
@@ -76,7 +84,7 @@
 <div class = 'game-letters pagination pagination-centered'>
 	<ul>
 		<li>
-			<a href = '/games/'>#</a>
+			<a href = '/games/<?php echo $manufacturer ?: 'all'; ?>/<?php echo $system ?: 'all'; ?>/Special'>#</a>
 		</li>
 		<?php foreach(range('A', 'Z') as $l) : ?>
 		<li>

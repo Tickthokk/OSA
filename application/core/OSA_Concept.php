@@ -97,15 +97,12 @@ abstract class OSA_Concept
 	 * Enable Set
 	 *  Allow a variable to be quickly set through a controller/model.
 	 *  Forces the programmer to state their intent, avoiding accidental database overwrites.
-	 * @param string/array $var
+	 * @param string/array/multiple $var
 	 * @param string $value >> Include for a quick __set
 	 */
 	public function enable_set($var)
 	{
-		if (is_array($var))
-			$this->_enabled_set_fields = array_merge($var, $this->_enabled_set_fields);
-		else
-			$this->_enabled_set_fields[] = $var;
+		$this->_enabled_set_fields = array_merge(func_get_args(), $this->_enabled_set_fields);
 	}
 
 	/**
@@ -254,7 +251,7 @@ abstract class OSA_Concept
 	 */
 	private function _ticks_needed($value)
 	{
-		if (preg_match('/^NOW\(\)/i', $value) || preg_match('/^MD5\(/i', $value))
+		if (preg_match('/NOW\(\)/i', $value) || preg_match('/MD5\(/i', $value) || $value == 'NULL')
 			return FALSE;
 
 		return TRUE;
@@ -271,7 +268,6 @@ abstract class OSA_Concept
 			->from($this->_table)
 			->where('id', $this->id)
 			->get()->num_rows();
-
 	}
 	
 }

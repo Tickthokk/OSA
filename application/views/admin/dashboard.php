@@ -28,19 +28,34 @@
 			<div><small>achieved count</small></div>
 		</div>
 	</div>
-	<div class = 'row-fluid'>
+	<header>
+		<h1>Attention Needed</h1>
+	</header>
+	<div class = 'row-fluid attention_needed'>
+		<?php if ($flagged_games_tally) : ?>
 		<div class = 'span2'>
-			<div class = 'kpi'><?php echo $flagged_games_tally; ?></div>
-			<div><small>flagged games</small></div>
+			<a href = '/admin/game_flags?search=unsolved'>
+				<div class = 'kpi'><?php echo $flagged_games_tally; ?></div>
+				<small>flagged games</small>
+			</a>
 		</div>
+		<?php endif; ?>
+		<?php if ($flagged_links_tally) : ?>
 		<div class = 'span2'>
-			<div class = 'kpi'><?php echo $flagged_links_tally; ?></div>
-			<div><small>flagged links</small></div>
+			<a href = '/admin/link_flags?search=unsolved'>
+				<div class = 'kpi'><?php echo $flagged_links_tally; ?></div>
+				<small>flagged links</small>
+			</a>
 		</div>
+		<?php endif; ?>
+		<?php if ($unapproved_links_tally) : ?>
 		<div class = 'span2'>
-			<div class = 'kpi'><?php echo $unapproved_links_tally; ?></div>
-			<div><small>unapproved links</small></div>
+			<a href = '/admin/links?search=unapproved'>
+				<div class = 'kpi'><?php echo $unapproved_links_tally; ?></div>
+				<small>unapproved links</small>
+			</a>
 		</div>
+		<?php endif; ?>
 	</div>
 </section>
 <?php /*
@@ -59,6 +74,3 @@
 
 </section>
 */ ?>
-<section style = 'min-height: 220px;'>
-	<!-- Looks weird with a bunch of non-white space -->
-</section>

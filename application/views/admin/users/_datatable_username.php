@@ -1,0 +1,1 @@
+<a href = '/user/<?php echo $username; ?>' rel = 'tooltip' title = 'Visit the User&#39;s page'><?php echo $username; ?></a>

@@ -24,6 +24,17 @@ body {
 
 .pointer { cursor: pointer; }
 
+.small {
+	font-size: .85em;
+}
+
+.opaque {
+	-webkit-opacity: 0.5;
+	-moz-opacity: 0.5;
+	filter:alpha(opacity=50);
+	opacity: 0.5;
+}
+
 .pane {
 	border-radius: 9px; 
 	-moz-border-radius: 9px; 
@@ -240,5 +251,75 @@ ul#links {
 		font-family: '8bit';
 		color: green;
 		font-size: 1.125em;
+	}
+}
+
+.form-actions {
+	.btn {
+		&.fll {
+			margin-left: 20px;
+			&+.fll {
+				margin-left: 5px;
+			}
+		}
+	}
+}
+
+.achievement_icon {
+	width: 64px;
+	height: 64px;
+	border-radius: 5px;
+	&.bigger {
+		width: 120px;
+		height: 120px;
+	}
+	&.super {
+		width: 512px;
+		height: 512px;
+	}
+}
+
+.icon_tags {
+	.icon_tag {
+		cursor: pointer;
+		display: inline-block;
+		text-decoration: underline;
+		color: white;
+		background-color: black;
+		font-size: 1.15em;
+		padding: .5em;
+		margin: 3px;
+		border-radius: 5px;
+		-webkit-transition: all .2s;
+		transition: all .2s;
+
+		&:hover {
+			background: #333;
+		}
+	}
+}
+
+.icon_holder {
+	.achievement_icon {
+		cursor: pointer;
+		-webkit-transition: all .2s ease-in-out;
+		transition: all .2s ease-in-out;
+
+		&:hover {
+			-webkit-backface-visibility: hidden;
+			-moz-transform: translate3d(0,0,0) scale(1.2);
+			-webkit-transform: translate3d(0,0,0) scale(1.2);
+			transform: translate3d(0,0,0) scale(1.2);
+		}
+	}
+	
+}
+
+.icon_chooser {
+	.achievement_icon {
+		margin-bottom: 4px;
+	}
+	.form-actions {
+		text-align: right;
 	}
 }

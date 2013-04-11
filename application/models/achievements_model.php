@@ -5,7 +5,7 @@ class Achievements_model extends CI_Model
 	
 	public 
 		$game_id = null,
-		$_games = array();
+		$_achievements = array();
 
 	public function __construct()
 	{
@@ -25,16 +25,12 @@ class Achievements_model extends CI_Model
 	public function load($achievement_id)
 	{
 		if ($achievement_id <= 0 || ! is_numeric($achievement_id))
-			return;
+			return; # TODO nice error: Invalid Game
 		
-		# Manually include necessary files
-		include_once(APPPATH . 'core/OSA_Concept.php');
-		include_once(APPPATH . 'models/achievement_model.php');
+		if ( ! isset($this->_achievements[$achievement_id]))
+			$this->_achievements[$achievement_id] = $this->concept->load('achievement', $achievement_id);
 		
-		if ( ! isset($this->_games[$achievement_id]))
-			$this->_games[$achievement_id] = new Achievement_model($achievement_id, $this->db);
-		
-		return $this->_games[$achievement_id];
+		return $this->_achievements[$achievement_id];
 	}
 
 	/**
