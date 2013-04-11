@@ -1,33 +1,57 @@
 <?php
 
-class Games extends OSA_Controller
+class Games_Controller extends Base_Controller 
 {
-	
-	public function view($manufacturer = 'all', $system = 'all', $letter = 'all')
+
+	public $per_page = 8;
+
+	public function action_index($developer = 'all', $system = 'all', $letter = 'all')
 	{
-		# Models
-		$this->load->model('Games_model', 'games');
+		// $query_string = array();
+		// foreach (array('developer', 'system', 'letter') as $var)
+		// {
+		// 	$value =& $$var;
+		// 	if (is_null($value))
+		// 	{
+		// 		$value = Input::get($var);
+		// 		if ( ! $value)
+		// 			$value = 'all';
+		// 	}
+		// 	$query_string[$var] = $value;
+		// }
 		
-		# Data
-		$developer_systems = $this->games->get_developer_systems();
+		//$pagination = Game::filtrate($developer, $system, $letter, $this->per_page);
 
-		if ($letter == 'Special')
-			$letter = NULL;
-
-		$games = $this->games->get_games($manufacturer, $system, $letter);
-
-		# Header
-		$this->set_title('Games');
-		$this->_data['page_nav_choice'] = 'Games';
-
-		# Body
-		$this->set_more_data(compact(
-			'manufacturer', 'system', 'letter', 
-			'developer_systems', 'games'
-		));
-
-		# Page Load
-		$this->_load_wrapper('games/filter');
+		return View::make('games')
+			->with(array(
+				'chosen_developer' => $developer,
+				'chosen_system' => $system,
+				'chosen_letter' => $letter,
+				'developers' => Developer::with(array('systems'))->order_by('slug')->get(),
+				//'games' => $pagination->results,
+				//'pagination' => $pagination->appends($query_string)->links(),
+				'games' => Game::filtrate($developer, $system, $letter),
+				'pagination' => ''
+			));
 	}
-	
+
+	public function action_search()
+	{
+		$search_term = Input::get('search');
+
+		$search_term = trim($search_term);
+
+		$pagination = DB::table('games')
+			->where('games.name', 'like', '%' . $search_term . '%')
+			->paginate($this->per_page);
+
+		return View::make('search')
+			->with(array(
+				'games' => $pagination->results,
+				'pagination' => $pagination->appends(array('search' => $search_term))->links(),
+				'search_term' => $search_term,
+				'per_page' => $this->per_page
+			));
+	}
+
 }

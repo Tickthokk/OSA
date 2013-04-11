@@ -1,1 +1,0 @@
-<a href='#' class='add_tag'>Add Tag</a>

@@ -1,417 +1,260 @@
 <?php
 
-class Achievement extends OSA_Controller
+class Achievement_Controller extends Base_Controller 
 {
 
-	/**
-	 * achievement/view
-	 */
-	public function view($achievement_id = 0)
+	public $restful = TRUE;
+
+	public $seconds_between_posts = 20;
+
+	public function get_view($achievement_id = 0)
 	{
-		# Helpers, Library, Models
-		$this->load->model('Games_model', 'games');
-		$this->load->model('Achievements_model', 'achievements');
-		$this->load->helper(array('form', 'markdown', 'time_elapsed', 'text'));
+		//$old_comment = Session::get('unposted_comment');
 
-		$this->achievement = $this->achievements->load($achievement_id);
+		$achievement = Achievement::with(array(
+				'system', 
+				'user',
+				'tags',
+				'icon',
+				'game',
+				/*'comments',
+				'comments.user',*/
+				'users' => function($query)
+				{
+					$query->order_by('created_at', 'DESC')->take(10);
+				},
+				'achievements.icon',
+				'achievements.users'
+			))->find($achievement_id);
 
-		if ( ! $this->achievement->exists())
-			show_error('That achievement does not exist.');
+		// Parse the Markdown
+		Bundle::start('sparkdown');
+		$achievement->markdown_description = Sparkdown\Markdown($achievement->description);
 
-		$this->game = $this->games->load($this->achievement->game_id);
+		// Get the basic information
+		$achievement->basic_statistics();
 
-		if ( ! $this->game->exists())
-			show_error('That game does not exist.');
+		// Markdown each comment, check for Disemvowelment
+		// foreach ($achievement->comments as $comment)
+		// {
+		// 	$comment->markdown_comment = Sparkdown\Markdown($comment->comment);
 
-		$game_data = $this->game->get_all();
-		$game_data['id'] = $this->achievement->game_id;
+		// 	if ($comment->admin_lock)
+		// 		$comment->markdown_comment = '<strong>An administrator has disemvoweled this comment.</strong><br>' . 
+		// 									preg_replace('/[aeiouy\d\-\.\_]/i', '', strip_tags($comment->markdown_comment));
+		// }
 		
-		$achievement_data = $this->achievement->get_all();
-		$achievement_data['system_exclusive'] = $this->achievement->system_exclusive();
-		$achievement_data['username'] = $this->achievement->username;
-		
-		list($comments, $total_comments) = $this->achievement->get_comments();
+		return View::make('achievement')
+			->with(array(
+				'achievement' => $achievement,
+				'user_has_achieved' => Auth::check() 
+					? Auth::user()->has_achieved($achievement_id) 
+					: NULL/*,
+				'top_comment_id' => 0,
+				'old_comment' => $old_comment*/
+			));
+	}
 
-		$this->_data['comments'] = $comments;
-		$this->_data['total_comments'] = $total_comments;
+	// User has Achieved this one
+	public function get_achieve($achievement_id = 0)
+	{
+		// The user has to be logged in
+		if ( ! Auth::check())
+		{
+			Session::flash('error', 'You must log in to use this feature!');
+			Session::put('login_redirect', $_SERVER['REQUEST_URI']);
+			return Redirect::to('auth/login');
+		}
 
-		$this->_data['tags'] = $this->achievement->get_tags($this->user->id);
-		$this->_data['achievers'] = $this->achievement->get_achievers();
-		
-		$this->_data['comments_already_shown'] = 0;
-		$this->_data['top_comment_id'] = $total_comments ? $comments[0]['id'] : 0;
+		$au = AchievementUser::where('user_id', '=', Auth::user()->id)
+			->where('achievement_id', '=', $achievement_id)->get();
 
-		$this->_data['game'] = $game_data;
-		$this->_data['achievement'] = $achievement_data;
-		$this->_data['achievement_id'] = $achievement_id;
-		$this->_data['user_has_achieved'] = $this->achievement->has_achieved($this->user->id);
-		$this->_data['old_comment'] = $this->session->flashdata('old_comment');
+		// Make sure an achievement doesn't already exist for that user
+		if ($au)
+			Session::flash('warning', 'You have already achieved ' . Achievement::find($achievement_id)->name);
+		else
+		{
+			AchievementUser::create(array(
+				'user_id' => Auth::user()->id,
+				'achievement_id' => $achievement_id
+			));
 
-		# Page Data
-		$this->set_title('Achievement | ' . $this->achievement->name);
-		
-		$this->_data['css'] = array(
-			'thirdparty/jquery.tagit',
-			'thirdparty/tagit.ui-zendesk',
+			Session::flash('success', 'You achieved ' . Achievement::find($achievement_id)->name);
+		}
+
+		return Redirect::to('/achievement/' . $achievement_id);
+	}
+
+	// Create an Achievement Form
+	public function get_create($game_id = 0)
+	{
+		// The user has to be logged in
+		if ( ! Auth::check())
+		{
+			Session::flash('error', 'You must log in to use this feature!');
+			Session::put('login_redirect', $_SERVER['REQUEST_URI']);
+			return Redirect::to('auth/login');
+		}
+
+		// Prep Icons for javascript/json
+		$icons = array();
+		foreach (Icon::with('tags')->get() as $icon)
+		{
+			$i = array(
+				'id' => $icon->id,
+				'filename' => $icon->filename,
+				'tags' => array()
+			);
+
+			foreach($icon->tags as $tag) 
+				$i['tags'][] = $tag->name;
+
+			$icons[] = $i;
+		}
+
+		// Old Input Values
+		$old_values = Input::old();
+		// Make sure the indexes exist
+		foreach (array('name', 'description', 'system-exclusive', 'icon', 'icon-color', 'icon-bg', 'item') as $field)
+			if ( ! isset($old_values[$field]))
+				$old_values[$field] = NULL;
+
+		if ( ! isset($old_values['item']['tags']))
+			$old_values['item'] = array('tags' => array());
+			
+
+		Bundle::start('sparkdown');
+		return View::make('achievement.create')
+			->with('game', Game::with('systems', 'systems.developer')->find($game_id))
+			->with('unique_icon_tags', Icon::unique_tags())
+			->with('icons', $icons)
+			->with('default_tags', Tag::defaults())
+			->with('old_values', $old_values);
+	}
+
+	// Create an Achievement
+	public function post_create($game_id = 0)
+	{
+		// The user has to be logged in
+		if ( ! Auth::check())
+		{
+			Session::flash('error', 'You must log in to use this feature!');
+			Session::put('login_redirect', $_SERVER['REQUEST_URI']);
+			return Redirect::to('auth/login');
+		}
+
+		// Validate Data
+		$validation = Validator::make(Input::all(), array(
+			'name' => 'required',
+			'description' => 'required',
+			'icon' => 'required'
+		));
+
+		// Make sure the icon exists
+		$icon_id = Icon::find_icon_id(Input::get('icon'));
+
+		if ($validation->fails() || Input::get('item') == null || $icon_id == 0)
+		{
+			$errors = array();
+
+			if (Input::get('item') == null)
+				$errors[] = '<div><strong>tags</strong> The tags field is required.</div>';
+
+			if ($icon_id == 0)
+				$errors[] = '<div><strong>icon</strong> That was not a valid icon.  Hax?</div>';
+			
+			foreach ($validation->errors->messages as $field => $messages)
+				foreach ($messages as $message)
+					$errors[] = '<div><strong>' . $field . '</strong> ' . $message . '</div>';
+
+			Session::flash('error', implode('', $errors));
+			Input::flash();
+			return Redirect::to('/achievement/create/' . $game_id);
+		}
+
+		// Prep some vars
+		$system_exclusive = Input::get('system-exclusive');
+		if ($system_exclusive == 'all')
+			$system_exclusive = null;
+
+		// Create the achievement
+		$achievement = Game::find($game_id)->achievements()->insert(
+			new Achievement(array(
+				'user_id' => Auth::user()->id, // Auth::check() above
+				'name' => Input::get('name'),
+				'description' => Input::get('description'),
+				'system_exclusive' => $system_exclusive,
+				'icon_id' => $icon_id,
+				'icon_color' => hexdec(Input::get('icon-color')) ?: null,
+				'icon_background' => hexdec(Input::get('icon-bg')) ?: null
+			))
 		);
 
-		$this->_data['js'] = array(
-			'jquery/tagcloud.min',
-			'achievement'
-		);
-		
-		# Page Load
-		$this->_load_wrapper('achievement/view');
-	}
-
-	/**
-	 * achievement/create
-	 */
-	public function create($game_id)
-	{
-		if (empty($game_id))
-			show_404();
-
-		$this->_users_only();
-
-		# Helpers, Library, Models
-		$this->load->helper(array('form', 'url', 'markdown'));
-		$this->load->library('form_validation');
-		$this->load->model('Games_model', 'games');
-		$this->load->model('Achievements_model', 'achievements');
-
-		$this->achievements->set_game_id($game_id);
-
-		# Form Validation Rules
-		$this->form_validation->set_rules('name', 'Name', 'required');
-		$this->form_validation->set_rules('description', 'Description', 'required');
-		$this->form_validation->set_rules('tags', 'Tags', 'required');
-		
-		# Validate!
-		if ($this->form_validation->run() == FALSE)
-		{
-			# Page Data
-			$this->set_title('Add an Achievement');
-			$css = array(
-				'thirdparty/jquery.tagit',
-				'thirdparty/tagit.ui-zendesk'
-			);
-			$js = array(
-				'jquery/tag-it', 
-				'create'
-			);
-
-			# Get List of icons
-			# TODO cache this (somehow)
-			$this->load->helper('directory');
-			$map = directory_map(FCPATH . 'assets/images/icons/');
-
-			$this->game = $this->games->load($game_id);
-
-			$game_name = $this->game->name;
-
-			$default_tags = $this->achievements->get_default_tags();
-
-			$systems = $this->game->get_systems();
-
-			$this->set_more_data(compact(
-				'css', 'js', 'game_name', 'game_id', 'default_tags', 'systems', 'map'
+		// Add tags to achievements
+		$item = Input::get('item');
+		foreach ($item['tags'] as $tag)
+			AchievementTag::create(array(
+				'user_id' => Auth::user()->id,
+				'achievement_id' => $achievement->id,
+				'tag_id' => Tag::new_tag($tag) // Only creates if needed, returns ID
 			));
-			
-			# Page Load
-			$this->_load_wrapper('achievement/create');
-		}
-		else
-		{
-			// Validation Succeeded
-			// Create the achievement
-			$achievement_id = $this->achievements->create($this->user->id, $game_id, $this->input->post());
 
-			// Add Tags to the achievement
-			$this->achievement = $this->achievements->load($achievement_id);
 
-			$this->achievement->initial_tags($this->user->id, explode(',', strtolower($this->input->post('tags'))));
+		Session::flash('success', 'You created this achievement!');
 
-			redirect('/achievement/' . $achievement_id, 'location');
-		}
+		return Redirect::to('/achievement/' . $achievement->id);
 	}
 
-	#######################
-	# POST Only Functions #
-	#######################
+	// AJAX Calls
 
-	public function comment($achievement_id)
+	// Add a new Tag
+	public function post_tag($achievement_id = 0)
 	{
-		# Only allow logged users
-		$this->_users_only();
+		// Only available via AJAX
+		if ( ! Request::ajax())
+			return Event::first('403');
 
-		# Helpers, Library, Models
-		$this->load->model('Achievements_model', 'achievements');
-		$this->load->helper(array('form', 'markdown', 'time_elapsed'));
-		$this->load->library('form_validation');
+		// The user has to be logged in
+		if ( ! Auth::check())
+			return Event::first('400', 'Feature only available to users.');
 
-		$this->achievement = $this->achievements->load($achievement_id);
-
-		# When did the person last comment?
-		$last_comment = $this->session->userdata('last_comment');
-		// debug 
-		$last_comment = NULL;
-
-		# Validate the comment
-		$this->form_validation->set_rules('comment', 'Comment', 'required');
-
-		if ($this->form_validation->run() == FALSE)
-		{
-			# Form didn't validate (aka empty comment), Fail
-
-			# Set error message
-			# TODO move to a language file
-			$this->session->set_flashdata('error', 'You cannot post empty comments.');
-
-			# Keep their old comment
-			$this->session->set_flashdata('old_comment', $comment);
-		}
-		elseif ($last_comment && $last_comment + $this->config->item('time_between_posts') >= time())
-		{
-			# If the last comment time exists
-			# And the last comment, plus `x` seconds is greater than now, Fail
-
-			# Set error message
-			# TODO move to a language file
-			$this->session->set_flashdata('error', 'You cannot post that often, sorry!  Try again in ' . $this->config->item('time_between_posts') . ' seconds.');
-
-			# Keep their old comment
-			$this->session->set_flashdata('old_comment', $comment);
-		}
-		else
-		{
-			# Otherwise, Success!
-
-			# Add to the database
-			$this->achievement->add_comment($this->user->id, $this->input->post('comment'));
-
-			# Set their "last comment"
-			$this->session->set_userdata('last_comment', time());
-
-			# Success message
-			# TODO move to a language file
-			$this->session->set_flashdata('success', 'Your comment has been posted!');
-		}
-
-		# Regardless of what happens...
-		# Redirect back to achievement page
-		redirect('/achievement/' . $achievement_id);
-	}
-
-	##################
-	# AJAX Functions #
-	##################
-
-	public function vote($way, $achievement_tag_id)
-	{
-		// Method only available via Ajax calls and users who are logged in
-		$this->_ajax_only(TRUE);
-
-		$approval = 1; // Default: Approve!
-		if ($way == 'down') $approval = -1;
-		elseif ($way == 'flag') $approval = -2;
-
-		$this->load->model('Achievements_model', 'achievements');
+		Achievement::find($achievement_id)->attach_tag(trim(strtolower(Input::get('tag'))));
 		
-		$achievement_id = $this->achievements->find_from_tag_id($achievement_tag_id);
-		
-		$this->achievement = $this->achievements->load($achievement_id);
-
-		$this->achievement->vote($this->user->id, $achievement_tag_id, $approval);
+		return View::make('achievement.tags')
+			->with('achievement', Achievement::with('tags')->find($achievement_id));
 	}
 
-	public function achieve($achievement_id)
+	// Update the Achievement Description
+	public function put_view($achievement_id = 0)
 	{
-		// Method only available via Ajax calls and users who are logged in
-		$this->_ajax_only(TRUE);
+		// Only available via AJAX
+		if ( ! Request::ajax())
+			return Event::first('403');
 
-		# Helpers, Library, Models
-		$this->load->model('Achievements_model', 'achievements');
-		$this->load->helper(array('time_elapsed'));
+		// The user has to be logged in
+		if ( ! Auth::check())
+			return Event::first('400', 'Feature only available to users.');
 
-		$this->achievement = $this->achievements->load($achievement_id);
+		$achievement = Achievement::find($achievement_id);
 
-		$this->achievement->achieve($this->user->id);
+		if ( ! $achievement->exists)
+			return Event::first('400', 'That achievement does not exist.');
 
-		$this->session->set_userdata('tally', $this->session->userdata('tally') + 1);
+		if ($achievement->user_id != Auth::user()->id)
+			return Event::first('401', 'You are not the owner of this achievement.');
 
-		$this->_data['achievers'] = $this->achievement->get_achievers();
+		if ($achievement->admin_lock)
+			return Event::first('401', 'An administrator has locked this achievement.');
 
-		$this->_ajax_return(array(
-			'achievers' => $this->_preview('achievement/_achievers')
-		));
-	}
+		$new_description = Input::get('comment');
 
-	public function edit_comment($comment_id)
-	{
-		// Method only available via Ajax calls and users who are logged in
-		$this->_ajax_only(TRUE);
+		// Update the database
+		$achievement->description = $new_description;
+		$achievement->save();
 
-		# Helpers, Library, Models
-		$this->load->model('Achievements_model', 'achievements');
-		$this->load->helper('markdown');
-		
-		$achievement_id = $this->achievements->find_from_comment_id($comment_id);
+		Bundle::start('sparkdown');
 
-		$this->achievement = $this->achievements->load($achievement_id);
-
-		$comment = $this->input->post('comment');
-
-		if ($this->achievement->edit_comment($this->user->id, $comment_id, $comment))
-			$this->_ajax_return(array(
-				'comment' => markdown($comment)
-			));
-		else
-			$this->_ajax_error('This is not your comment.');
-	}
-
-	public function delete_comment($comment_id)
-	{
-		// Method only available via Ajax calls and users who are logged in
-		$this->_ajax_only(TRUE);
-
-		# Helpers, Library, Models
-		$this->load->model('Achievements_model', 'achievements');
-		
-		$achievement_id = $this->achievements->find_from_comment_id($comment_id);
-
-		$this->achievement = $this->achievements->load($achievement_id);
-
-		if ( ! $this->achievement->delete_comment($this->user->id, $comment_id))
-			$this->_ajax_error('This is not your comment.');
-	}
-
-	public function more_comments($achievement_id)
-	{
-		// Method only available via Ajax calls
-		$this->_ajax_only();
-
-		# Helpers, Library, Models
-		$this->load->model('Achievements_model', 'achievements');
-		$this->load->helper('markdown');
-
-		$this->achievement = $this->achievements->load($achievement_id);
-
-		$top_id = $this->input->post('top_id');
-		$offset = $this->input->post('offset');
-		
-		list($comments, $total_comments) = $this->achievement->get_comments($top_id, $offset, 10);
-
-		$this->_data['comments'] = $comments;
-		$this->_data['total_comments'] = $total_comments;
-		$this->_data['comments_already_shown'] = $offset;
-		
-		$this->_ajax_return(array(
-			'html' => $this->_preview('achievement/_comments')
-		));
-	}
-
-	public function edit_description($achievement_id)
-	{
-		// Method only available via Ajax calls and users who are logged in
-		$this->_ajax_only(TRUE);
-
-		# Helpers, Library, Models
-		$this->load->model('Achievements_model', 'achievements');
-		$this->load->helper('markdown');
-
-		$this->achievement = $this->achievements->load($achievement_id);
-
-		$description = $this->input->post('description');
-
-		# Does the achievement belong to them?
-		if ($this->achievement->user_id == $this->user->id || $this->user->is_moderator()) {
-
-			# Too many achievers prevents editing
-			if ($this->achievement->get_achiever_count() < $this->config->item('modify_if_achievers_under'))
-			{
-				# Update the database description
-				$this->achievement->set_more(array(
-					'description' => $description,
-					'modified' => 'NOW()'
-				));
-
-				$this->_ajax_return(array(
-					'description' => markdown($description)
-				));
-			}
-			else
-				// TODO language file
-				$this->_ajax_error('You no longer own this achievement.  Too many achievers.');
-		}
-		else
-			// TODO language file
-			$this->_ajax_error('You did not create this achievement.');
-	}
-
-	public function delete($achievement_id)
-	{
-		// Method only available via Ajax calls and users who are logged in
-		$this->_ajax_only(TRUE);
-
-		# Helpers, Library, Models
-		$this->load->model('Achievements_model', 'achievements');
-
-		$this->achievement = $this->achievements->load($achievement_id);
-
-		# Does the achievement belong to them?
-		if ($this->achievement->user_id == $this->user->id || $this->user->is_moderator()) {
-
-			# Too many achievers prevents deleting
-			if ($this->achievement->get_achiever_count() < $this->config->item('modify_if_achievers_under'))
-			{
-				// Pre-populate achievement name.  After it's deleted, we won't be able to pull it.
-				$achievement_name = $this->achievement->name;
-
-				# Trigger deletion failsafe
-				$this->achievement->allow_deletion();
-				# Delete the achievement.
-				$this->achievement->delete();
-
-				# Success message
-				# TODO move to a language file
-				$this->session->set_flashdata('success', $achievement_name . ' has been deleted.');
-
-				$this->_ajax_return(array(
-					'deleted' => TRUE
-				));
-			}
-			else
-				// TODO language file
-				$this->_ajax_error('You no longer own this achievement.  Too many achievers.');
-		}
-		else
-			// TODO language file
-			$this->_ajax_error('You did not create this achievement.');
-	}
-
-	public function suggest_tag($achievement_id)
-	{
-		// Method only available via Ajax calls and users who are logged in
-		$this->_ajax_only(TRUE);
-
-		# Helpers, Library, Models
-		$this->load->model('Achievements_model', 'achievements');
-
-		$this->achievement = $this->achievements->load($achievement_id);
-
-		$suggested_tag = strtolower($this->input->post('tag'));
-
-		if ($this->achievement->initial_tags($this->user->id, array($suggested_tag)))
-		{
-			$this->_data['tags'] = $this->achievement->get_tags($this->user->id);
-			
-			$this->_ajax_return(array(
-				'html' => $this->_preview('achievement/_tags')
-			));
-		}
-		else
-			$this->_ajax_error('That tag already exists.');
+		return Sparkdown\Markdown($new_description);
 	}
 
 }

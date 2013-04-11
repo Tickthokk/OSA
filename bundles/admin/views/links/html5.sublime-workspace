@@ -1,0 +1,699 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"sear",
+				"search_term"
+			],
+			[
+				"uni",
+				"unique_users"
+			],
+			[
+				"differe",
+				"different_users"
+			],
+			[
+				"achievement",
+				"achievement_id"
+			],
+			[
+				"parent",
+				"parent_review"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "/C/Users/nwright/Dropbox/github/html5/rpg/index.html",
+			"settings":
+			{
+				"buffer_size": 426,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/C/Users/nwright/Dropbox/github/html5/rpg/rpg.js",
+			"settings":
+			{
+				"buffer_size": 1524,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/C/Users/nwright/Dropbox/github/html5/rpg/players.js",
+			"settings":
+			{
+				"buffer_size": 227,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/C/Users/nwright/Dropbox/github/html5/rpg/utility.js",
+			"settings":
+			{
+				"buffer_size": 4000,
+				"line_ending": "Windows"
+			}
+		}
+	],
+	"build_system": "",
+	"command_palette":
+	{
+		"height": 392.0,
+		"selected_items":
+		[
+			[
+				"brack",
+				"Preferences: Browse Packages"
+			],
+			[
+				"package",
+				"Package Control: Remove Package"
+			],
+			[
+				"packa",
+				"Package Control: Install Package"
+			]
+		],
+		"width": 512.0
+	},
+	"console":
+	{
+		"height": 153.0
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/C/Users/nwright/Dropbox/github/html5/learning/hm.js",
+		"/C/Users/nwright/Dropbox/github/html5/learning/sprite.js",
+		"/C/Users/nwright/Dropbox/github/html5-harvest-moon/learning/hm.js",
+		"/C/Users/nwright/Dropbox/github/html5-harvest-moon/learning/enemy.js",
+		"/C/Users/nwright/Dropbox/github/html5-harvest-moon/learning/player.js",
+		"/C/Users/nwright/Dropbox/github/html5-harvest-moon/learning/key_status.js",
+		"/C/Users/nwright/Dropbox/github/html5-harvest-moon/learning/util.js",
+		"/C/Users/nwright/Dropbox/github/html5-harvest-moon/learning/sound.js",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/application/routes.php",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/bundles/admin/controllers/links.php",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/public/js/admin/games/links.js",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/bundles/admin/views/links/edit.blade.php",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/application/views/game/links.blade.php",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/application/controllers/game.php",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/public/js/_osa.js",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/application/models/link.php",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/bundles/admin/views/games/links/edit.blade.php",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/bundles/admin/views/games/edit.blade.php",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/public/js/admin/games/edit.js",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/bundles/admin/views/games.blade.php",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/public/js/admin/games.js",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/bundles/admin/controllers/users.php",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/public/js/admin/users.js",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/public/css/scss/admin.scss",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/bundles/admin/views/layouts/nav.blade.php",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/bundles/admin/views/users.blade.php",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/application/models/game.php",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/public/css/scss/common.scss",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/bundles/admin/views/layouts/admin.blade.php",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/bundles/admin/routes.php",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/bundles/admin/views/users/control.blade.php",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/bundles/admin/views/users/control.php",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/application/controllers/auth.php",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/bundles/admin/controllers/achievements.php",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/bundles/admin/controllers/games.php",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/bundles/admin/views/dashboard.blade.php",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/bundles/admin/controllers/advanced.php",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/bundles/admin/controllers/dashboard.php",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/bundles/admin/controllers/flags.php",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/bundles/admin/controllers/icons.php",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/bundles/admin/controllers/log.php",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/bundles/admin/controllers/tags.php",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/bundles/admin/views/TEST.blade.php",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/application/models/user.php",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/application/models/acl.php",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/application/bundles.php",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/bundles/admin/start.php",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/bundles/admin",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/application/controllers/games.php",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/application/views/games.blade.php",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/application/views/games/now_viewing.blade.php",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/application/controllers/useracl.php",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/laravel/paginator.php",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/laravel/uri.php",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/laravel/request.php",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/application/views/games/list.blade.php",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/application/views/layouts/common.blade.php",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/application/views/search.blade.php",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/public/css/scss/layout.scss",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/application/views/games/search.php",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/public/js/game.js",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/application/views/game/achievements.blade.php",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/application/views/game.blade.php",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/public/js/create.js",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/application/controllers/achievement.php",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/application/models/achievementtag.php",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/application/models/tag.php",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/application/views/achievement/create.blade.php",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/application/models/icon.php",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/public/js/achievement.js",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/application/views/achievement/comments.blade.php",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/application/controllers/home.php",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/application/views/front.blade.php",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/application/views/game/achievement/creation_wizard.php",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/application/views/achievement.blade.php",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/application/views/achievement/achievers.blade.php",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/application/views/auth/login.blade.php",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/application/controllers/credential.php",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/bundles/oneauth/config/urls.php",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/bundles/oneauth/config/api.php",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/bundles/laravel-oauth2/providers/github.php",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/application/controllers/user.php",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/public/css/scss/font-awesome.scss",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/application/views/markdown/example.blade.php",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/application/views/games/developers.blade.php",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/application/views/games/letters.blade.php",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/application/controllers/flag.php",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/application/controllers/comment.php",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/public/css/bootstrap.min.css",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/application/views/achievement/modals.blade.php",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/application/models/achievement.php",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/application/views/achievement/tags.blade.php",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/application/models/achievementuser.php",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/bundles/sparkdown/parser.php",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/public/js/bootstrap.min.js",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/bundles/sparkdown/view.php",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/application/views/game/modals.blade.php",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/public/js/jquery/evol.colorpicker.custom.min.js",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/application/models/flag.php",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/application/views/about.blade.php",
+		"/C/Users/nwright/Downloads/__serve.php",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/application/models/imagecontrol.php",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/storage/cache/images/games/originals/.gitignore",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/application/controllers/images.php",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/paths.php",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/application/controllers/base.php",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/application/config/database.php",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/application/config/application.php",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/application/views/error/403.php",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/application/views/error/400.php",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/application/views/user.blade.php",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/laravel/auth/drivers/eloquent.php",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/screencast_notes.txt",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/application/config/auth.php",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/public/.htaccess",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/application/models/gamesystem.php",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/application/models/system.php",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/application/models/developer.php",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/application/models/activity.php",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/application/models/achievement_user.php",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/application/start.php",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/application/models/comment.php",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/application/models/achievement_comments.php",
+		"/C/Users/nwright/Documents/dumps/Dump20130117.sql",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/application/views/wrapper.blade.php",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/application/views/template.blade.php",
+		"/C/Users/nwright/Dropbox/github/OSA-LV/application/views/home/front.blade.php",
+		"/C/Users/nwright/Dropbox/github/OSA/application/views/wrapper/header.php"
+	],
+	"find":
+	{
+		"height": 34.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+			""
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			".1",
+			".5",
+			"1",
+			"w",
+			"W",
+			"w",
+			"size",
+			"hm",
+			"\"",
+			"hm",
+			"file:///C:/Users/Nick/Dropbox/github/html5-harvest-moon/",
+			"site",
+			"slug",
+			"$game",
+			"game_edit_goback",
+			"$game",
+			"game_edit_goback",
+			"\"",
+			"->id",
+			"$system",
+			"system",
+			"li",
+			"script",
+			"style",
+			"><i",
+			"</i></a>",
+			"\n				</a>",
+			" class='flr'",
+			"$user",
+			"users",
+			"Users",
+			"users",
+			"checked",
+			"if",
+			"unless",
+			"banned",
+			"unless",
+			"json",
+			"order_by",
+			"$users",
+			" ",
+			"&",
+			"<span>",
+			"well",
+			"</span>",
+			"span",
+			"span2",
+			"</span>",
+			"p",
+			" = ",
+			"NULL",
+			"$appends",
+			"appends",
+			"$$var",
+			"'all'",
+			", ",
+			" = ",
+			"achieved-toggle",
+			"chevron",
+			"font-family",
+			"font-face",
+			"\" rel",
+			"$$",
+			"user_achieved",
+			"icon-",
+			"up",
+			"bg",
+			"evo",
+			"tag",
+			"strong",
+			"i",
+			"64",
+			"128",
+			", $title = ",
+			"div",
+			"span2",
+			"background-color",
+			"html",
+			"  ",
+			" ;",
+			" XXXX ",
+			"\\t",
+			"'#' + ",
+			"fill",
+			"color",
+			"fill",
+			"stroke",
+			"color",
+			"fill",
+			"img_color",
+			"img_bg",
+			"img.data('bg')",
+			"span2",
+			"span4",
+			"span3",
+			"span4",
+			"64px",
+			" ",
+			"bootstrap",
+			"$_GET['code']",
+			"<a",
+			"span",
+			"developer",
+			"game-",
+			"\"",
+			"new_comment",
+			"0.5",
+			" = ",
+			"dataType",
+			" icon-white",
+			"tag->id",
+			"new_tag",
+			"tag_string",
+			"$achievement->id",
+			"achieve()",
+			"']",
+			"$a['",
+			"; ?>",
+			"<?php echo ",
+			"user_has_achieved",
+			"; ?>",
+			"<?php echo ",
+			" &&",
+			"h2",
+			"MarkdownExtra_Parser",
+			"$level",
+			"Markdown_Parser",
+			"MarkdownExtra_Parser"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": true,
+		"replace_history":
+		[
+			" ",
+			";",
+			"\\n",
+			" ",
+			"",
+			"?$1&",
+			"#CAMPAIGN#",
+			"#CREATIVE#",
+			"http://www.cablestogo.com/static/content/images/email/wrapper/",
+			"tmg",
+			"http://www.c2g.com/uk/static/content/images/email/template/spacer.gif",
+			"spacer.gif",
+			"www",
+			"1129NPrsm",
+			"1129NPr",
+			"1127HCsm",
+			"1129QT",
+			"1120CSsm",
+			"1120WEBsm",
+			"1127HC",
+			"line-height: 15px;",
+			"1120WEB",
+			"1120CS",
+			"11272012",
+			"1115NPr",
+			"1113CS",
+			"11132012",
+			"1108TMGsm",
+			"www",
+			"1108TMG",
+			"11132012",
+			"1106WSEsm",
+			"1106WSE",
+			"1025HAOCsm",
+			"1025HAOC2sm",
+			"1025HAOC2",
+			"1025TMGsm",
+			"1025HAOC",
+			"1025TMG",
+			"10232012",
+			"1016CKsm",
+			"1016CK",
+			"10162012",
+			"1002TYNsm",
+			"1011FBRsm",
+			"1011FBR",
+			"1002TYN",
+			"10/02",
+			"10022012",
+			"0927ICTsm",
+			"09/c2g/27",
+			"0927ICT",
+			"0925LRNsm",
+			"09212012",
+			"0920TAAsm",
+			"0925LRN",
+			"0920TAA",
+			"0920HOCsm",
+			"0918NYCsm",
+			"0920HOC",
+			"www",
+			"0918NYC",
+			"09182012",
+			"0913INNsm",
+			"0913INN",
+			"09112012",
+			"\\t\\n",
+			"0911BTDsm",
+			"0904CCEsm",
+			"0911BTD",
+			"0904CCE",
+			"0828CLRsm",
+			"0830CHTsm",
+			"08282012",
+			"0828CLR",
+			"0828IPMsm",
+			"0828TRNsm",
+			"0830CHT",
+			"0828IPM",
+			"0828TRN",
+			"0822Conf",
+			"0823NPrsm",
+			"0823NPr",
+			"0821TRUsm",
+			"0821TRU",
+			"08142012",
+			"0807AOCsm",
+			"www",
+			"2012/08",
+			"0807AOC",
+			"0809CSNsm",
+			"0809CSN",
+			"0807NPrsm",
+			"www",
+			"0803CSN",
+			"0802WEBsm",
+			"0807EXPsm",
+			"0802WEB",
+			"www",
+			"0807NPr",
+			"0807EXP",
+			"0724EDUsm",
+			"07242012",
+			"0719NPr2sm",
+			"www",
+			"0724EDU",
+			"		",
+			"\\t",
+			"0719NPr2",
+			"0726MPsm",
+			"0726MP",
+			"courses?em_cid",
+			"07172012",
+			"07162012",
+			"0717SGsm",
+			"0719NPrsm",
+			"www",
+			"0717SG",
+			"0719NPr",
+			"2012WEL",
+			"0710HDMIsm",
+			"0710HDMI",
+			"0703NPrsm",
+			"0705EXPsm",
+			"0703THXsm",
+			"http://www.c2g.com/uk/static/content/images/email/2012/07/",
+			"07102012",
+			"0712WEB"
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 2,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "/C/Users/nwright/Dropbox/github/html5/rpg/index.html",
+					"settings":
+					{
+						"buffer_size": 426,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								369,
+								369
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "/C/Users/nwright/Dropbox/github/html5/rpg/rpg.js",
+					"settings":
+					{
+						"buffer_size": 1524,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								336,
+								336
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 601.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "/C/Users/nwright/Dropbox/github/html5/rpg/players.js",
+					"settings":
+					{
+						"buffer_size": 227,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								156,
+								156
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "/C/Users/nwright/Dropbox/github/html5/rpg/utility.js",
+					"settings":
+					{
+						"buffer_size": 4000,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								740,
+								740
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 0.0
+	},
+	"input":
+	{
+		"height": 32.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.exec":
+	{
+		"height": 118.0
+	},
+	"replace":
+	{
+		"height": 62.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 500.0,
+		"selected_items":
+		[
+			[
+				"quik",
+				"/C/Users/nwright/Documents/Projects/quicktron.sublime-project"
+			],
+			[
+				"",
+				"/C/Users/nwright/Documents/Projects/connectxpress.sublime-project"
+			]
+		],
+		"width": 380.0
+	},
+	"show_minimap": true,
+	"show_open_files": true,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 241.0,
+	"status_bar_visible": true
+}

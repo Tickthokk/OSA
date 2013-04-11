@@ -1,1 +1,0 @@
-<span rel = 'tooltip' title = '<?php echo html_quotes($url); ?>'><?php echo $site; ?></span>

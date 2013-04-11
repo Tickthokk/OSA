@@ -1,0 +1,46 @@
+ul.nav a {
+	color: black;
+}
+
+.admin_search {
+	margin-top: 20px;
+	margin-bottom: 0px;
+}
+
+table {
+	th, td {
+		padding: .675em;
+	}
+	thead {
+		th {
+			a {
+				display: block;
+				&:hover {
+					text-decoration: none;
+				}
+				i {
+					color: black;
+				}
+			}
+		}
+	}
+	.actions {
+		a, i, span {
+			margin-right: 5px;
+			&:last-child {
+				margin-right: 0px;
+			}
+			text-decoration: none;
+			color: black;
+			i.red {
+				color: red;
+			}
+			i.green {
+				color: green;
+			}
+			&.link {
+				cursor: pointer;
+			}
+		}
+	}
+}

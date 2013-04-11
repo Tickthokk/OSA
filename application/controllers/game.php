@@ -1,139 +1,241 @@
 <?php
 
-class Game extends OSA_Controller
+class Game_Controller extends Base_Controller 
 {
-	
-	public function index($game_id)
+
+	public $restful = TRUE;
+
+	public function get_view($game_id = 0)
 	{
-		# Models
-		$this->load->model('Games_model', 'games');
-		$this->load->model('Achievements_model', 'achievements');
-		$this->load->helper(array('markdown'));
+		$game = Game::with(array(
+			'systems', 
+			'links',
+			'achievements',
+			'achievements.tags', 
+			'achievements.system', 
+			'systems.developer',
+			'achievements.users' => function($query)
+			{
+				if (Auth::check())
+					$query->where('user_id', '=', Auth::user()->id);
+			},
+			'achievements.icon',
+			'achievement.tags'
+		))->find($game_id);
 
-		$this->game = $this->games->load($game_id);
+		// Now we need basic information about the game's flags
+		$game->flag_statistics();
 
-		if ( ! $this->game->exists())
-			show_error('That game does not exist.');
+		// Preload the link flag statistics
+		foreach ($game->links as $link)
+			$link->flag_statistics();
+
+		// Go through all the achievement bits
+		Bundle::start('sparkdown');
 		
-		$this->achievements->game_id = $this->game->id;
+		// Clean up each achievement
+		$tag_list = array();
+		$user_achieve_tally = 0;
+		foreach ($game->achievements as $achievement)
+		{
+			// Preload all achievement statistics
+			$achievement->basic_statistics();
 
-		# Header
-		$this->set_title($this->game->name);
+			// Parse the Markdown, but then remove any html
+			$achievement->description = strip_tags(Sparkdown\Markdown($achievement->description));
 
-		# Body
-		$this->_data['wiki_slug'] = $this->game->wiki_slug;
-		$this->_data['links'] = $this->game->get_links();
-		$this->_data['game_id'] = $this->game->id;
-		$this->_data['systems'] = $this->game->get_systems();
+			// Compress the Tags
+			$tags = array();
+			foreach ($achievement->tags as $tag)
+			{
+				$tags[] = $tag->name;
+				if ( ! isset($tag_list[$tag->name]))
+					$tag_list[$tag->name] = 0;
+				$tag_list[$tag->name]++;
+			}
+
+			$achievement->compact_tags = json_encode($tags);
+
+			// Did the user achieve this?
+			$achievement->user_achieved = $achievement->users && Auth::check() && $achievement->users[0]->id == Auth::user()->id;
+			if ($achievement->user_achieved)
+				$user_achieve_tally++;
+		}
+
+		$tag_list = array_unique($tag_list);
+		arsort($tag_list);
 		
-		$this->_data['achievements'] = $this->game->get_achievements($this->user->id);
-
-		$this->_data['js'] = array('game', 'jquery/labelover');
-		
-		# Page Load
-		$this->_load_wrapper('game/view');
+		return View::make('game')
+			->with('game', $game)
+			->with('tag_list', $tag_list)
+			->with('user_achieve_tally', $user_achieve_tally);
 	}
 
-	public function create()
+	// GETing links 
+	public function get_links($game_id = 0)
 	{
-		# Helpers, Library, Models
-		$this->load->helper(array('form', 'url'));
-		$this->load->library('form_validation');
-		$this->load->model('Games_model', 'games');
+		// Only available via AJAX
+		if ( ! Request::ajax())
+			return Event::first('403');
 
-		# Form Validation Rules
-		$this->form_validation->set_rules('name', 'Name', 'required');
-		$this->form_validation->set_rules('slug', 'Slug', 'required|is_unique[games.slug]');
-		$this->form_validation->set_rules('c-or-p', 'Console/Portable', 'required');
-		$this->form_validation->set_rules('system[]', 'Systems', 'required');
+		$game = Game::with(array('links'))->find($game_id);
 
-		# Validate!
-		if ($this->form_validation->run() == FALSE)
-		{
-			# System List
-			$systems = $this->games->get_developer_systems();
+		// Preload the link flag statistics
+		foreach ($game->links as $link)
+			$link->flag_statistics();
 
-			# Fix what was posted, because we'll need this later
-			$post_system = (array) $this->input->post('system');
-			foreach ($systems as $s)
-				if ( ! isset($post_system[$s['id']]))
-					$post_system[$s['id']] = array();
-			
-			# Page Data
-			$this->set_title('Add a Game');
-			$js = array('create');
-			$this->set_more_data(compact(
-				'js', 'systems', 'post_system'
-			));
-			
-			# Page Load
-			$this->_load_wrapper('create/game');
-		}
-		else
-		{
-			// Validation Succeeded
-			// Create the game [uses post data]
-			$game_id = $this->games->create();
-
-			redirect('/game/' . $game_id . '/' . $this->input->post('slug'), 'location');
-		}
+		return View::make('game.links')
+			->with('game', $game);
 	}
 
-	##################
-	# AJAX Functions #
-	##################
-
-	public function guess_wikislug()
+	// POSTing to links is a new link
+	public function post_links($game_id = 0)
 	{
+		// Only available via AJAX
+		if ( ! Request::ajax())
+			return Event::first('403');
 
-		
+		// Validate data
+		$site_name = Input::get('site');
+		$site_url = Input::get('url');
+
+		if ( ! filter_var($site_url, FILTER_VALIDATE_URL))
+			return Event::first('400', 'URL is invalid.');
+		elseif (empty($site_name))
+			return Event::first('400', 'Site Name is required.');
+
+		$game = Game::find($game_id);
+
+		// Make sure the game exists
+		if ($game->exists)
+			// Create a link
+			$game->links()->insert(new Link(array(
+				'user_id' => Auth::check() ? Auth::user()->id : NULL,
+				'site' => $site_name,
+				'url' => $site_url
+			)));
+
+		return TRUE;
 	}
 
 	/**
-	 * Link
-	 *  User suggested a new link
+	 * GET game Image
 	 */
-	public function link($game_id)
+	public function get_image($game_id = 0, $width = 300, $height = 300)
 	{
-		// Method only available via Ajax calls and users who are logged in
-		$this->_ajax_only(TRUE);
+		// Temporary: Placeholdit images
+		/*header('Content-Type: image/gif');
+		readfile('http://placehold.it/' . $width . 'x300');
+		exit;*/
 
-		// Validate
-		$site = $this->input->post('site');
-		$url = $this->input->post('url');
+		$cache_path = path('storage') . 'cache' . DS . 'images' . DS . 'games' . DS;
+		$originals_path = $cache_path . 'originals' . DS;
 
-		if ( ! filter_var($url, FILTER_VALIDATE_URL))
-			$this->_ajax_error('The URL is invalid');
-		elseif ( ! $site)
-			$this->_ajax_error('The Site name is required.');
+		// Build the filename, without an extension
+		// It could be JPG, GIF, PNG, whatever
+		// Example: 27_300_auto // GAMEID_WIDTH_HEIGHT
+		$filename = $game_id . '_' . $width . '_' . $height;
 
-		# Models
-		$this->load->model('Games_model', 'games');
+		$result = glob($cache_path . $filename . '.{jpg,jpeg,png,gif}', GLOB_BRACE);
+		$file = isset($result[0]) ? $result[0] : NULL;
 
-		$this->game = $this->games->load($game_id);
+		// If the cached version doesn't exist, look for the original
+		if ( ! $file)
+		{
+			// Re-Set the filename
+			// It will be saved as "1.jpg", "2.gif", etc
+			$filename = $game_id;
 
-		$this->game->add_link($this->user->id, $site, $url);
-	}
+			// Glob again, but in the originals
+			$result = glob($originals_path . $filename . '.{jpg,jpeg,png,gif}', GLOB_BRACE);
+			$file = isset($result[0]) ? $result[0] : NULL;
 
-	/**
-	 * Links - Get Links
-	 */
-	public function links($game_id)
-	{
-		// Method only available via Ajax calls
-		$this->_ajax_only();
+			// If the original version doesn't exist, get it from wikipedia
+			if ( ! $file)
+			{
+				// Look up the wiki_slug from the game
+				$link = Link::where('game_id', '=', $game_id)->where('site', '=', 'Wikipedia')->order_by('id')->first();
 
-		# Models
-		$this->load->model('Games_model', 'games');
+				// Assume we're not gonna find anything, prove me wrong
+				$file = $originals_path . 'not_found.jpg';
 
-		$this->game = $this->games->load($game_id);
+				if ($link->exists)
+				{
+					$user_agent = 'User-Agent: OSADataGrabber (+http://oldschoolachievements.com/OSADataGrabber/)';
+					
+					$wiki_link = $link->url;
 
-		$this->_data['wiki_slug'] = $this->game->wiki_slug;
-		$this->_data['links'] = $this->game->get_links();
+					// Replace http://en.wikipedia.org
+					//    With http://en.m.wikipedia.org (m. added)
+					$wiki_link = preg_replace('/^http\:\/\/en\.wikipedia\.org/', 'http://en.m.wikipedia.org', $wiki_link);
 
-		$this->_ajax_return(array(
-			'html' => $this->_preview('game/_links')
-		));
+					// Use CURL to get the HTML of the wikipedia page.
+					$ch = curl_init();
+					curl_setopt($ch, CURLOPT_URL, $wiki_link);
+					curl_setopt($ch, CURLOPT_HEADER, 0);
+					curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+					curl_setopt($ch, CURLOPT_USERAGENT, $user_agent);
+					$result = curl_exec($ch);
+					$curl_info = curl_getinfo($ch);
+					curl_close($ch);
+
+					if ($curl_info['http_code'] != 404)
+					{
+						// Load that HTML into the DOM parser
+						$dom = new DOMDocument();
+						@$dom->loadHTML($result);
+						$finder = new DomXPath($dom);
+
+						// Get the Image
+						$wiki_image = $finder->query("//table[@class='infobox hproduct']/tr[2]/td/a[@class='image']/img[1]/@src")->item(0)->nodeValue;
+
+						// Get the extension from the src
+						preg_match('/\.(\w{3,4})$/', $wiki_image, $matches);
+						$ext = $matches[1];
+						
+						// Grab the file from Wikipedia
+						$content = file_get_contents('http:' . $wiki_image);
+
+						// Set the File Path
+						$file = $originals_path . $filename . '.' . $ext;
+
+						// Save the file
+						file_put_contents($file, $content);
+					}
+				}
+			}
+			
+			// Original exists now
+			// Get the extension again, we won't always know it
+			$file_info = pathinfo($file);
+			$ext = $file_info['extension'];
+
+			Bundle::start('resizer');
+
+			$new_file = $cache_path . $filename . '_' . $width . '_' . $height . '.' . $ext;
+
+			// Resize it, cache it
+			$success = Resizer::open($file)
+				->resize($width, $height, 'auto')
+				->save($new_file, 90);
+
+			$file = $new_file;
+		}
+
+		$mime_types = array(
+			'png'	=>	'image/png',
+			'jpe'	=>	'image/jpeg',
+			'jpeg'	=>	'image/jpeg',
+			'jpg'	=>	'image/jpeg',
+			'gif'	=>	'image/gif',
+		);
+		$file_info = pathinfo($file);
+		$ext = $file_info['extension'];
+
+		// Cached version exists now, serve it up
+		header('Content-Type: ' . $mime_types[$ext]);
+		readfile($file);
+		exit;
 	}
 
 }

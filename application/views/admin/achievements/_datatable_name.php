@@ -1,1 +1,0 @@
-<a href = '/achievement/<?php echo $achievement_id; ?>' rel = 'tooltip' title = 'Visit the Achievement&#39;s page'><?php echo $achievement_name; ?></a>
