@@ -70,7 +70,7 @@ return array(
 		'mysql' => array(
 			'driver'   => 'mysql',
 			'host'     => '127.0.0.1',
-			'database' => 'osa2',
+			'database' => 'osa',
 			'username' => 'root',
 			'password' => '',
 			'charset'  => 'utf8',
